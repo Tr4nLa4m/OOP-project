@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="javaRPG">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/java-rpg-master/javaRPG.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

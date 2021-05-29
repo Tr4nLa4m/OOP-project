@@ -1,0 +1,16 @@
+<component name="libraryTable">
+  <library name="Libs">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/java-rpg-master/Libs/tritonus_share.jar!/" />
+      <root url="jar://$PROJECT_DIR$/java-rpg-master/Libs/mp3spi1.9.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/java-rpg-master/Libs/jl1.0.1.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../Programs/javafx-sdk-11.0.2/lib" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../../Programs/javafx-sdk-11.0.2/lib" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/../../Programs/javafx-sdk-11.0.2/lib" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/../../Programs/javafx-sdk-11.0.2/lib" recursive="false" type="SOURCES" />
+  </library>
+</component>
