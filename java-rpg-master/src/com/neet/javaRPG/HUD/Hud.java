@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 import com.neet.javaRPG.Entity.Enemy;
 import com.neet.javaRPG.Entity.Player;
-import com.neet.javaRPG.Main.GamePanel;
+
 import com.neet.javaRPG.Manager.Content;
 
 public class Hud {
@@ -49,12 +49,13 @@ public class Hud {
 		Content.drawString(g, "Lv. " + player.getLevel(), 81, yoffset + 4);
 		Content.drawString(g, "ATK: " + player.getATK(), 130, yoffset + 18);
 		Content.drawString(g, "DEF: " + player.getDEF(), 130, yoffset + 32);
+		Content.drawString(g, "Item" , 200, yoffset +4);
 		
 		// draw diamond amount
 		g.setColor(textColor);
 		g.setFont(font);
 		
 		//draw items
-		if(player.hasSword()) g.drawImage(sword, 30, yoffset + 4, null);
+		if(player.hasSword()) g.drawImage(sword, 200, yoffset + 12, null);
 	}
 }

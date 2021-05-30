@@ -64,7 +64,10 @@ public class TileMap {
 				getClass().getResourceAsStream(s)
 			);
 			BufferedImage subimage;
-			if(IDTile >= 6 && IDTile <= 9){
+			if(IDTile == 4){
+				subimage = tileset.getSubimage(0, 0, tileSize, 48);
+			}
+			else if(IDTile >= 6 && IDTile <= 9){
 				subimage = tileset.getSubimage((IDTile - 6) * tileSize, 0, tileSize, tileSize);
 			}else if(IDTile == 10){
 				subimage = tileset.getSubimage(0, tileSize, tileSize, tileSize);
@@ -88,8 +91,7 @@ public class TileMap {
 		}
 		
 	}
-	//		tileMap = new TileMap(16);
-	//		tileMap.loadTiles("/Resources/Tilesets/testtileset.gif");
+
 	public void loadMap(String s) {
 
 		loadTiles("/Resources/Sprites/GrassBackGround.png",1);
@@ -230,13 +232,11 @@ public class TileMap {
 				if(col >= numCols) break;
 				if(map[row][col] == 0) continue;
 				g.drawImage(tiles[1].getImage(),x + col*tileSize, y + row * tileSize, null);
-				g.drawImage(
-					tiles[map[row][col]].getImage(),
-					x + col * tileSize,
-					y + row * tileSize,
-					null
-				);
-				
+				if(map[row][col] != 4)
+					g.drawImage(tiles[map[row][col]].getImage(), x + col * tileSize, y + row * tileSize, null);
+				else
+					g.drawImage(tiles[map[row][col]].getImage(), x + col * tileSize ,
+							y + row * tileSize - 16, null);
 			}
 			
 		}

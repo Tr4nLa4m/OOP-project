@@ -130,6 +130,7 @@ public class Player extends Combatant {
 				currentAnimation = LEFTCOMBAT;
 				setAnimation(LEFTCOMBAT, LeftSwordSprites, 5);
 			}
+
 		}else {
 
 			if (down) {
@@ -153,9 +154,10 @@ public class Player extends Combatant {
 				}
 			}
 
-			// update position
-			super.update();
 		}
+		// update position
+		super.update();
+		canSwordCombat = false;
 	}
 	
 	// Draw Player.

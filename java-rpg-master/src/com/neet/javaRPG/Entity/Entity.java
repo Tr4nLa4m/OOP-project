@@ -54,8 +54,7 @@ public abstract class Entity {
 	
 	public int getx() { return x; }
 	public int gety() { return y; }
-	public int getRow() { return rowTile; }
-	public int getCol() { return colTile; }
+
 	
 	public void setPosition(int i1, int i2) {
 		x = i1;

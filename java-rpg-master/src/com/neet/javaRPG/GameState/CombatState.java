@@ -2,10 +2,12 @@ package com.neet.javaRPG.GameState;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 
 import com.neet.javaRPG.Entity.Enemy;
 import com.neet.javaRPG.Entity.Player;
-import com.neet.javaRPG.Main.GamePanel;
+
 import com.neet.javaRPG.Manager.Content;
 import com.neet.javaRPG.Manager.GameStateManager;
 import com.neet.javaRPG.Manager.Keys;
@@ -16,8 +18,10 @@ public class CombatState extends GameState {
 
 	private Player player;
 //	private String infoString;
+	private Graphics g;
 	
 	private Enemy enemy;
+	private BufferedImage[] deathEffect;
 //	private String infoString;
 	
 	private String enemyString;
@@ -34,13 +38,7 @@ public class CombatState extends GameState {
 			"MP pot",
 			"Retreat"
 	};
-	
-	public CombatState(GameStateManager gsm, Player player, Enemy enemy) {
-		super(gsm);
-		this.player = player;
-		this.enemy = enemy;
-		init();
-	}
+
 	
 	public CombatState(GameStateManager gsm) {
 		super(gsm);
@@ -48,10 +46,7 @@ public class CombatState extends GameState {
 		this.enemy = null;
 		init();
 	}
-	
-	public void setPlayer(Player player) {
-		this.player = player;
-	}
+
 	
 	public void setEnemy(Enemy enemy) {
 		this.enemy = enemy;
@@ -94,6 +89,7 @@ public class CombatState extends GameState {
 			Content.drawString(g, enemyString, 0, yOffset + 36);
 		if(playerString != null)
 			Content.drawString(g, playerString, 0, yOffset + 20);
+
 	}
 	public void handleInput() {
 		if(Keys.isPressed(Keys.DOWN) && option < optionList.length - 1) {
@@ -114,6 +110,10 @@ public class CombatState extends GameState {
 			gsm.setCombat(false);
 //			enemyString = "Enemy is dead";
 			playState.enemyDefeat();
+
+			//draw DeathEffect
+
+
 			return;
 		}
 		double rng = Math.random();
@@ -187,4 +187,5 @@ public class CombatState extends GameState {
 		    Thread.currentThread().interrupt();
 		}
 	}
+
 }

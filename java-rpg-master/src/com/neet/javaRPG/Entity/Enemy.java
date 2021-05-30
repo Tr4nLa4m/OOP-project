@@ -11,17 +11,28 @@ import com.neet.javaRPG.TileMap.TileMap;
 
 public class Enemy extends Combatant {
 	private String name;
-	private int typeEnemy;
 
 	private BufferedImage[] sprites ;
 	private BufferedImage[][] sprite1;
+	private BufferedImage[] Down;
+	private BufferedImage[] Up;
+	private BufferedImage[] Right;
+	private BufferedImage[] Left;
 	
 	private ArrayList<int[]> tileChanges;
+	private int typeEnemy;
+
+	private int DOWN = 1;
+	private int UP = 2;
+	private int RIGHT = 3;
+	private int LEFT = 4;
+
+
 	
 	public Enemy(TileMap tm,int typeEnemy) {
 		this(tm, "Monster", null);
 		if(typeEnemy == 0){
-
+			this.typeEnemy = typeEnemy;
 			width = 16;
 			height = 16;
 			cwidth = 12;
@@ -34,9 +45,11 @@ public class Enemy extends Combatant {
 			animation.setFrames(sprites);
 			animation.setDelay(10);
 
+
 			tileChanges = new ArrayList<int[]>();
 		}
 		else if(typeEnemy == 1){
+			this.typeEnemy = typeEnemy;
 			width = 32;
 			height = 32;
 			cwidth = 28;
@@ -45,6 +58,7 @@ public class Enemy extends Combatant {
 			this.curHP = this.maxHP = 30;
 			this.curMP = this.maxMP = 20;
 			this.atk = 5;
+			this.moveSpeed = 1;
 
 			sprite1 = new BufferedImage[4][3];
 			for(int i = 4;i < 8 ; i++){
@@ -52,12 +66,18 @@ public class Enemy extends Combatant {
 					sprite1[i - 4][j - 3] = Content.MONSTER1[i][j];
 				}
 			}
-			animation.setFrames(sprite1[0]);
+			down = true;
+			Down = sprite1[0];
+			Left = sprite1[1];
+			Right = sprite1[2];
+			animation.setFrames(Down);
 			animation.setDelay(10);
+
 
 			tileChanges = new ArrayList<int[]>();
 		}
 		else if(typeEnemy == 2){
+			this.typeEnemy = typeEnemy;
 			width = 32;
 			height = 32;
 			cwidth = 28;
@@ -69,14 +89,22 @@ public class Enemy extends Combatant {
 			this.atk = 15;
 			this.def = 5;
 
+			this.moveSpeed = 2;
+
 			sprite1 = new BufferedImage[4][3];
 			for(int i = 0;i < 4 ; i++){
 				for(int j = 0; j < 3; j++){
 					sprite1[i][j] = Content.MONSTER1[i][j];
 				}
 			}
-			animation.setFrames(sprite1[0]);
+
+			down = true;
+			Down = sprite1[0];
+			Left = sprite1[1];
+			Right = sprite1[2];
+			animation.setFrames(Down);
 			animation.setDelay(10);
+
 
 			tileChanges = new ArrayList<int[]>();
 		}
@@ -95,8 +123,26 @@ public class Enemy extends Combatant {
 		super(tm, atk, def, hp, mp, level);
 		this.name = name;
 		this.skillList = skillList;
+
 	}
-	
+	public void update(){
+		super.update();
+		if(typeEnemy == 1){
+			if(down){
+				setRight();
+				setAnimation(DOWN, Down, 10);
+			}else if(right){
+				setLeft();
+				setAnimation(LEFT, Left, 10);
+			}else{
+				animation.setFrames(Down);
+				animation.setDelay(10);
+			}
+		}
+		down = false;
+		right = false;
+	}
+
 
 	
 	private static int getAtkFromLevel(int level) {
@@ -114,10 +160,7 @@ public class Enemy extends Combatant {
 	private static int getMPFromLevel(int level) {
 		return 10 + 5*(level - 1);
 	}
-	
-	public String getName() {
-		return this.name;
-	}
+
 	
 	public Skill useSkill() {
 		int numUsableSkill = 0;
@@ -148,4 +191,11 @@ public class Enemy extends Combatant {
 	public ArrayList<int[]> getChanges() {
 		return tileChanges;
 	}
+
+	private void setAnimation(int i, BufferedImage[] bi, int d) {
+		currentAnimation = i;
+		animation.setFrames(bi);
+		animation.setDelay(d);
+	}
+
 }

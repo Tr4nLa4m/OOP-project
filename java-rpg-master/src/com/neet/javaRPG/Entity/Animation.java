@@ -48,8 +48,8 @@ public class Animation {
 			currentFrame = 0;
 			timesPlayed++;
 		}
-		
 	}
+	
 	
 	public int getFrame() { return currentFrame; }
 	public int getCount() { return count; }

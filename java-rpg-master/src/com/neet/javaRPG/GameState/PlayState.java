@@ -146,8 +146,8 @@ public class PlayState extends GameState {
 		enemies.add(d);
 
 		d = new Enemy(tileMap, 2);
-		d.setSkillList(skillList);
 		d.setTilePosition(37, 3);
+		d.setSkillList(skillList);
 		enemies.add(d);
 
 		d = new Enemy(tileMap,0);
