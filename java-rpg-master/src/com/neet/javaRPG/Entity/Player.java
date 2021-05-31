@@ -18,7 +18,11 @@ public class Player extends Combatant {
 	private BufferedImage[] LeftSwordSprites = new BufferedImage[4];
 	private BufferedImage[] DownSwordSprites = new BufferedImage[4];
 
-	
+	//time attacked
+	private long timer = 0;
+	private long lastTime = 0;
+	private final long attackCoolDown = 8000;
+
 	// animation
 	private final int DOWN = 0;
 	private final int LEFT = 1;
@@ -43,7 +47,11 @@ public class Player extends Combatant {
 	public Player(TileMap tm) {
 		
 		super(tm);
-		
+
+		setMaxHP(50);
+		setMaxMP(50);
+		setCurrentHP(50);
+		setCurrentMP(50);
 		width = 32;
 		height = 32;
 		cwidth = 28;
@@ -111,7 +119,22 @@ public class Player extends Combatant {
 		
 		ticks++;
 
-
+		if(currentAnimation == DOWNCOMBAT &&((ticks%27) == 0)){
+			currentAnimation = DOWN;
+			setAnimation(DOWN, downSprites, 5);
+		}
+		else if(currentAnimation == UPCOMBAT &&((ticks%27) == 0)){
+			currentAnimation = UP;
+			setAnimation(UP, upSprites, 5);
+		}
+		else if(currentAnimation == LEFTCOMBAT &&((ticks%27) == 0)){
+			currentAnimation = LEFT;
+			setAnimation(LEFT, leftSprites, 5);
+		}
+		else if(currentAnimation == RIGHTCOMBAT &&((ticks%27) == 0)){
+			currentAnimation = RIGHT;
+			setAnimation(RIGHT, rightSprites, 5);
+		}
 		// set animation
 		if(canSwordCombat) {
 			if(currentAnimation == DOWN){
@@ -198,4 +221,15 @@ public class Player extends Combatant {
 	public void changeNumManaPot(int numManaPot) {
 		this.numManaPot += numManaPot;
 	}
+
+	public void attackedStatic() {
+
+		timer += System.currentTimeMillis() - lastTime;
+		lastTime = System.currentTimeMillis();
+		if(timer < attackCoolDown)	return;
+		this.changeHP(-1);
+		timer = 0;
+
+	}
+
 }

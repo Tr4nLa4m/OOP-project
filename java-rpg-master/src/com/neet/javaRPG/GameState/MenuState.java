@@ -35,8 +35,8 @@ public class MenuState extends GameState {
 		
 		g.drawImage(bg, 0, 0, null);
 		
-		Content.drawStringMenu(g, options[0], 250, 250);
-		Content.drawStringMenu(g, options[1], 250, 300);
+		Content.drawStringBig(g, options[0], 250, 250,30);
+		Content.drawStringBig(g, options[1], 250, 300, 30);
 		
 		if(currentOption == 0) g.drawImage(diamond, 230, 260, null);
 		else if(currentOption == 1) g.drawImage(diamond, 230, 310, null);

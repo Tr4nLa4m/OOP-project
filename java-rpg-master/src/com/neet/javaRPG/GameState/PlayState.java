@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+
 import com.neet.javaRPG.Entity.Enemy;
 import com.neet.javaRPG.Entity.Item;
 import com.neet.javaRPG.Entity.Player;
@@ -21,6 +22,7 @@ public class PlayState extends GameState {
 	
 	// player
 	private Player player;
+
 	
 	// tilemap
 	private TileMap tileMap;
@@ -146,7 +148,7 @@ public class PlayState extends GameState {
 		enemies.add(d);
 
 		d = new Enemy(tileMap, 2);
-		d.setTilePosition(37, 3);
+		d.setTilePosition(33, 3);
 		d.setSkillList(skillList);
 		enemies.add(d);
 
@@ -233,14 +235,16 @@ public class PlayState extends GameState {
 			
 			Enemy d = enemies.get(i);
 			d.update();
-			
+			if(canStaticAttack(d,player)){
+					player.attackedStatic();
+
+			}
 			if(player.intersects(d)) {
 
 				fightingEnemy = d;
 				gsm.setCombat(true);
 				enemies.remove(i);
 				i--;
-				
 
 			}
 		}
@@ -332,8 +336,13 @@ public class PlayState extends GameState {
 		return this.player;
 	}
 	
-	
-	
+	public boolean canStaticAttack(Enemy d,Player p){
+		double dx = Math.abs( p.getx() - d.getx());
+		double dy = Math.abs( p.gety() - d.gety());
+		if( dx < 64 &&  dy < 64)	return  true;
+		return false;
+
+	}
 	public Enemy getEnemy() {
 		return fightingEnemy;
 	}

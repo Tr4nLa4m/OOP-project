@@ -35,6 +35,9 @@ public abstract class Entity {
 	
 	// attributes
 	protected int moveSpeed;
+
+	// static attack
+	protected boolean StaticAttack;
 	
 	// tilemap
 	protected TileMap tileMap;

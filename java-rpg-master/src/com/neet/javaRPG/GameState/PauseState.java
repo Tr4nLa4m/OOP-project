@@ -20,18 +20,18 @@ public class PauseState extends GameState {
 	
 	public void draw(Graphics2D g) {
 		
-		Content.drawStringMenu(g, "paused", 240, 180);
+		Content.drawStringBig(g, "paused", 240, 180, 30);
 		
-		Content.drawString(g, "arrow", 250, 260);
-		Content.drawString(g, "keys", 296, 260);
-		Content.drawString(g, ": move", 336, 260);
+		Content.drawStringBig(g, "arrow", 250, 260,10);
+		Content.drawStringBig(g, "keys", 310, 260,10);
+		Content.drawStringBig(g, ": move", 350, 260,10);
 		
-		Content.drawString(g, "space", 250, 290);
-		Content.drawString(g, ": action", 290, 290);
+		Content.drawStringBig(g, "space", 250, 290,10);
+		Content.drawStringBig(g, ": action", 310, 290,10);
 		
-		Content.drawString(g, "F1:", 250, 320);
-		Content.drawString(g, "return", 276, 320);
-		Content.drawString(g, "to menu", 332, 320);
+		Content.drawStringBig(g, "F1:", 250, 320,10);
+		Content.drawStringBig(g, "return", 280, 320,10);
+		Content.drawStringBig(g, "to menu", 350, 320,10);
 		
 	}
 	public void handleInput() {

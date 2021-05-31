@@ -72,23 +72,15 @@ public class CombatState extends GameState {
 		enemy.draw(g);
 		
 		//redraw hp, mp bar
-		g.setColor(new Color(255, 0, 0)); //red
-		g.fillRect(87, yOffset + 26, (int)(36 * player.getCurrentHP() / player.getMaxHP()), 5);
-		Content.drawString(g, "HP", 81, yOffset + 18);
-		
-		g.setColor(new Color(0, 0, 255));
-		g.fillRect(87, yOffset + 39, (int)(36 * player.getCurrentMP() / player.getMaxMP()), 5);
-		Content.drawString(g, "MP", 81, yOffset + 32);
-		
-		Content.drawString(g, "Lv. " + player.getLevel(), 81, yOffset + 4);
+
 		
 		//Combat option
-		Content.drawString(g, optionList[option], 14, yOffset + 4);
-		g.drawImage(Content.DIAMOND[0][0], 0, yOffset + 2, null);
+		Content.drawStringBig(g, optionList[option], 250, yOffset + 200, 20);
+		g.drawImage(Content.DIAMOND[0][0], 220, yOffset + 204, null);
 		if(enemyString != null)
-			Content.drawString(g, enemyString, 0, yOffset + 36);
+			Content.drawStringBig(g, enemyString, 250, yOffset + 250, 12);
 		if(playerString != null)
-			Content.drawString(g, playerString, 0, yOffset + 20);
+			Content.drawStringBig(g, playerString, 250, yOffset + 270,12);
 
 	}
 	public void handleInput() {

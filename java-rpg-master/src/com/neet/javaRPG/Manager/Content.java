@@ -55,7 +55,7 @@ public class Content {
 			g.drawImage(font[row][col], x + 8 * i, y, null);
 		}
 	}
-	public static void drawStringMenu(Graphics2D g, String s, int x, int y) {
+	public static void drawStringBig(Graphics2D g, String s, int x, int y,int size) {
 		s = s.toUpperCase();
 		for(int i = 0; i < s.length(); i++) {
 			char c = s.charAt(i);
@@ -66,7 +66,7 @@ public class Content {
 			else if(c >= 48 && c <= 57) c -= 22; // numbers
 			int row = c / font[0].length;
 			int col = c % font[0].length;
-			g.drawImage(font[row][col], x + 30 * i, y,30,30, null);
+			g.drawImage(font[row][col], x + size * i, y,size,size, null);
 		}
 	}
 }

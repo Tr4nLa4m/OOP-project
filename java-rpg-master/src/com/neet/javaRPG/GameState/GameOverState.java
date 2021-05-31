@@ -31,11 +31,11 @@ public class GameOverState extends GameState {
 		g.fillRect(0, 0, GamePanel.WIDTH, GamePanel.HEIGHT2);
 		
 		if(!isWin) {
-			Content.drawString(g, "You Lose", 24, 60);
-			Content.drawString(g, "Game Over", 24, 80);	
+			Content.drawStringBig(g, "You Lose", 180, 300,30);
+			Content.drawStringBig(g, "Game Over", 190, 200,30);
 		}
 		else {
-			Content.drawString(g, "You Win", 24, 60);
+			Content.drawStringBig(g, "You Win", 190, 300,30);
 		}
 		
 	}

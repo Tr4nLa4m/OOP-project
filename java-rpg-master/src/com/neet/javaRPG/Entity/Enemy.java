@@ -1,5 +1,6 @@
 package com.neet.javaRPG.Entity;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +11,7 @@ import com.neet.javaRPG.RPG.Skill;
 import com.neet.javaRPG.TileMap.TileMap;
 
 public class Enemy extends Combatant {
-	private String name;
+	private int xMove;
 
 	private BufferedImage[] sprites ;
 	private BufferedImage[][] sprite1;
@@ -21,16 +22,23 @@ public class Enemy extends Combatant {
 	
 	private ArrayList<int[]> tileChanges;
 	private int typeEnemy;
+	private String name;
 
 	private int DOWN = 1;
 	private int UP = 2;
 	private int RIGHT = 3;
 	private int LEFT = 4;
 
+	private long timer;
+	private long lastTime;
+	private long distance ;
+
 
 	
 	public Enemy(TileMap tm,int typeEnemy) {
 		this(tm, "Monster", null);
+		timer = 0;
+		lastTime = System.currentTimeMillis();
 		if(typeEnemy == 0){
 			this.typeEnemy = typeEnemy;
 			width = 16;
@@ -58,15 +66,15 @@ public class Enemy extends Combatant {
 			this.curHP = this.maxHP = 30;
 			this.curMP = this.maxMP = 20;
 			this.atk = 5;
-			this.moveSpeed = 1;
+			this.moveSpeed = 2;
 
+			distance = 0;
 			sprite1 = new BufferedImage[4][3];
 			for(int i = 4;i < 8 ; i++){
 				for(int j = 3; j < 6; j++){
 					sprite1[i - 4][j - 3] = Content.MONSTER1[i][j];
 				}
 			}
-			down = true;
 			Down = sprite1[0];
 			Left = sprite1[1];
 			Right = sprite1[2];
@@ -125,40 +133,54 @@ public class Enemy extends Combatant {
 		this.skillList = skillList;
 
 	}
-	public void update(){
-		super.update();
-		if(typeEnemy == 1){
-			if(down){
-				setRight();
-				setAnimation(DOWN, Down, 10);
-			}else if(right){
-				setLeft();
-				setAnimation(LEFT, Left, 10);
+
+	public void moveX(){
+		if(timer < 2000){
+			if(distance < 80){
+				xMove = moveSpeed;
+				x += xMove;
+				timer += System.currentTimeMillis() - lastTime;
+				distance += xMove;
 			}else{
-				animation.setFrames(Down);
-				animation.setDelay(10);
+				xMove = 0;
+				distance = 0;
+				timer = 2000;
 			}
 		}
-		down = false;
-		right = false;
+		else if(timer>=2000 && timer <= 4000){
+			if(distance < 80){
+				xMove = -moveSpeed;
+				x += xMove;
+				timer += System.currentTimeMillis() - lastTime;
+				distance -= xMove;
+			}else{
+				xMove = 0;
+				distance = 0;
+				timer = 0;
+			}
+		}else{
+			timer = 0;
+		}
+		lastTime = System.currentTimeMillis();
 	}
 
+	public void update(){
+		super.update();
+		moveX();
 
-	
-	private static int getAtkFromLevel(int level) {
-		return 5 + 3*(level - 1);
 	}
-	
-	private static int getDefFromLevel(int level) {
-		return 5 + 2*(level - 1);
-	}
-	
-	private static int getHPFromLevel(int level) {
-		return 10 + 5*(level - 1);
-	}
-	
-	private static int getMPFromLevel(int level) {
-		return 10 + 5*(level - 1);
+
+	private BufferedImage getCurrentAnimationFrame() {
+		if (xMove < 0) {
+			animation.setFrames(Left);
+			animation.setDelay(30);
+			return animation.getImage();
+		} else if (xMove > 0) {
+			animation.setFrames(Right);
+			animation.setDelay(30);
+			return animation.getImage();
+		}
+		return null;
 	}
 
 	
@@ -192,10 +214,15 @@ public class Enemy extends Combatant {
 		return tileChanges;
 	}
 
-	private void setAnimation(int i, BufferedImage[] bi, int d) {
-		currentAnimation = i;
-		animation.setFrames(bi);
-		animation.setDelay(d);
+	public void draw(Graphics2D g) {
+		if(typeEnemy == 0){
+			setMapPosition();
+			g.drawImage(animation.getImage(),x + xmap - width / 2,y + ymap - height / 2,null);
+		}
+		else {
+			setMapPosition();
+			g.drawImage(getCurrentAnimationFrame(),x + xmap - width / 2,y + ymap - height / 2,null);
+		}
 	}
 
 }
