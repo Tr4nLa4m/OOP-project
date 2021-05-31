@@ -92,7 +92,12 @@ public class Player extends Combatant {
 
 	
 	// Used to update time.
-	public TileMap getTileMap() { return this.tileMap; }
+	public void addLevel(int i) {
+		this.level += i;
+		addATK(i*3);
+		addDEF(i*2);
+
+	}
 	
 	// Keyboard input. Moves the player.
 	public void setDown() {

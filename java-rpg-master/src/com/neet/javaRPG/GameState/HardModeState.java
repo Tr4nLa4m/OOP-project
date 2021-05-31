@@ -67,7 +67,7 @@ public class HardModeState extends GameState {
 
         // create player
         player = new Player(tileMap);
-        player.addSkill(new PowerAttack(player.getATK()));
+        player.addSkill(new PowerAttack(10,7));
 
         // fill lists
         populateEnemies();

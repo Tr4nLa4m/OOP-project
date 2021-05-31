@@ -175,9 +175,16 @@ public class CombatState extends GameState {
 			}
 			break;
 		case 4:
-			if(Action.retreat()) {
+				if(enemy.getTypeEnemy() == 0){
+					player.changeHP(-1 * enemy.getCurrentHP());
+				}
+				else {
+					player.changeHP(-1 * enemy.getCurrentHP());
+					if(player.getLevel() > 1)
+						player.addLevel(-1);
+				}
 				gsm.setCombat(false);
-			}
+
 			playerString = null;
 			break;
 		}

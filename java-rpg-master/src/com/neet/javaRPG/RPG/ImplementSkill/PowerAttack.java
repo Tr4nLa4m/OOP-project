@@ -9,6 +9,9 @@ public class PowerAttack extends Skill {
 	public PowerAttack(int baseDamage) {
 		super(5, baseDamage, "Power Attack");
 	}
+	public PowerAttack(int mpCost,int baseDamage){
+		super(mpCost,baseDamage, "Super Power ");
+	}
 	
 	@Override
 	public void execute(Combatant attacker, Combatant defender) {

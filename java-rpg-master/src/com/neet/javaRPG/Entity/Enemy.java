@@ -390,8 +390,8 @@ public class Enemy extends Combatant {
 		return !skillList.isEmpty();
 	}
 	
-	public void addChange(int[] i) {
-		tileChanges.add(i);
+	public int getTypeEnemy() {
+		return typeEnemy;
 	}
 	public ArrayList<int[]> getChanges() {
 		return tileChanges;
