@@ -2,8 +2,7 @@ package com.neet.javaRPG.Manager;
 
 import java.awt.Graphics2D;
 
-import com.neet.javaRPG.Entity.Enemy;
-import com.neet.javaRPG.Entity.Player;
+
 import com.neet.javaRPG.GameState.*;
 
 public class GameStateManager {
@@ -20,14 +19,14 @@ public class GameStateManager {
 	private int currentState;
 	private int previousState;
 	
-	private Player player;
-	private Enemy enemy;
+
 	
-	public static final int NUM_STATES = 4;
+	public static final int NUM_STATES = 5;
 	public static final int INTRO = 0;
 	public static final int MENU = 1;
 	public static final int PLAY = 2;
 	public static final int GAMEOVER = 3;
+	public static final int HARDMODE = 4;
 	
 	public GameStateManager() {
 		
@@ -48,15 +47,24 @@ public class GameStateManager {
 		unloadState(previousState);
 		currentState = i;
 		switch(i) {
-		case INTRO:
+		case INTRO:{
 			gameStates[i] = new IntroState(this);
 			break;
-		case MENU:
+		}
+		case MENU:{
 			gameStates[i] = new MenuState(this);
 			break;
-		case PLAY:
+		}
+		case PLAY:{
+
 			gameStates[i] = new PlayState(this);
 			break;
+		}
+		case HARDMODE:{
+				gameStates[i] = new HardModeState(this);
+				break;
+		}
+
 		case GAMEOVER:
 			gameStates[i] = new GameOverState(this);
 			((GameOverState)gameStates[i]).setIsWin(isWin);

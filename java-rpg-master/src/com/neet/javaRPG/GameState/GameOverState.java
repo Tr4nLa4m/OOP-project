@@ -30,7 +30,7 @@ public class GameOverState extends GameState {
 		g.setColor(color);
 		g.fillRect(0, 0, GamePanel.WIDTH, GamePanel.HEIGHT2);
 		
-		if(!isWin) {
+		if(isWin == false) {
 			Content.drawStringBig(g, "You Lose", 180, 300,30);
 			Content.drawStringBig(g, "Game Over", 190, 200,30);
 		}

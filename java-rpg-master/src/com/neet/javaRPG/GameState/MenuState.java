@@ -14,8 +14,7 @@ public class MenuState extends GameState {
 	
 	private int currentOption = 0;
 	private String[] options = {
-		"START",
-		"QUIT"
+		"START", "HARDMODE","QUIT"
 	};
 	
 	public MenuState(GameStateManager gsm) {
@@ -35,11 +34,13 @@ public class MenuState extends GameState {
 		
 		g.drawImage(bg, 0, 0, null);
 		
-		Content.drawStringBig(g, options[0], 250, 250,30);
-		Content.drawStringBig(g, options[1], 250, 300, 30);
+		Content.drawStringBig(g, options[0], 250, 200,30);
+		Content.drawStringBig(g, options[1], 250, 250, 30);
+		Content.drawStringBig(g, options[2], 250, 300, 30);
 		
-		if(currentOption == 0) g.drawImage(diamond, 230, 260, null);
-		else if(currentOption == 1) g.drawImage(diamond, 230, 310, null);
+		if(currentOption == 0) g.drawImage(diamond, 230, 210, null);
+		else if(currentOption == 1) g.drawImage(diamond, 230, 260, null);
+		else if(currentOption == 2) g.drawImage(diamond, 230, 310, null);
 		
 	}
 	
@@ -60,6 +61,10 @@ public class MenuState extends GameState {
 			gsm.setState(GameStateManager.PLAY);
 		}
 		if(currentOption == 1) {
+			gsm.setState(GameStateManager.PLAY);
+
+		}
+		if(currentOption == 2){
 			System.exit(0);
 		}
 	}

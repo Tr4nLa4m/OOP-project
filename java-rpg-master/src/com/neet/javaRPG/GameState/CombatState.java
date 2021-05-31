@@ -72,7 +72,19 @@ public class CombatState extends GameState {
 		enemy.draw(g);
 		
 		//redraw hp, mp bar
+		g.setColor(new Color(255, 0, 0)); //red
+		g.fillRect(550, yOffset + 16, (int)2*(36 * enemy.getCurrentHP() / enemy.getMaxHP()), 8);
+		Content.drawString(g, "HP", 550, yOffset+ 4);
+		Content.drawString(g, "" + enemy.getCurrentHP(), 570, yOffset + 4);
 
+		g.setColor(new Color(0, 0, 255));
+		g.fillRect(550, yOffset + 40, (int)2*(36 * enemy.getCurrentMP() / enemy.getMaxMP()), 8);
+		Content.drawString(g, "MP", 550, yOffset + 28);
+		Content.drawString(g, "" + enemy.getCurrentMP(), 570, yOffset + 28);
+
+		Content.drawString(g, "Lv. " + enemy.getLevel(), 480, yOffset + 4);
+		Content.drawString(g, "ATK: " + enemy.getATK(), 480, yOffset + 18);
+		Content.drawString(g, "DEF: " + enemy.getDEF(), 480, yOffset + 32);
 		
 		//Combat option
 		Content.drawStringBig(g, optionList[option], 250, yOffset + 200, 20);
@@ -121,7 +133,7 @@ public class CombatState extends GameState {
 		else {
 			Skill skill = enemy.useSkill();
 			Action.useSkill(skill, enemy, player);
-			enemyString = "M: P Atk";
+			enemyString = "M: Power Atk";
 		}
 	}
 	
@@ -156,7 +168,7 @@ public class CombatState extends GameState {
 			Skill s = player.getSkill(0);
 			if(s.canCast(player)) {
 				Action.useSkill(player.getSkill(0), player, enemy);
-				playerString = "P: P Atk";
+				playerString = "P: Power Atk";
 			}
 			else{
 				playerString = "P: No Mana";

@@ -7,11 +7,17 @@ import java.util.List;
 import java.util.Random;
 
 import com.neet.javaRPG.Manager.Content;
+import com.neet.javaRPG.GameState.PlayState;
 import com.neet.javaRPG.RPG.Skill;
 import com.neet.javaRPG.TileMap.TileMap;
 
 public class Enemy extends Combatant {
 	private int xMove;
+	private int yMove;
+	boolean movingX = true;
+	boolean movingY = false;
+
+	private Player player = PlayState.getPlayer();
 
 	private BufferedImage[] sprites ;
 	private BufferedImage[][] sprite1;
@@ -32,19 +38,26 @@ public class Enemy extends Combatant {
 	private long timer;
 	private long lastTime;
 	private long distance ;
+	private int direction;
+
+	private int homex,homey;
+	private boolean flag = false;
 
 
-	
-	public Enemy(TileMap tm,int typeEnemy) {
+	public Enemy(TileMap tm,int x, int y,int typeEnemy) {
 		this(tm, "Monster", null);
 		timer = 0;
+		this.homex = x;
+		this.homey = y;
+		setTilePosition(x,y);
+
 		lastTime = System.currentTimeMillis();
 		if(typeEnemy == 0){
 			this.typeEnemy = typeEnemy;
 			width = 16;
 			height = 16;
-			cwidth = 12;
-			cheight = 12;
+			cwidth = 16;
+			cheight = 16;
 
 			sprites = new BufferedImage[5];
 			for(int i = 0;i < 5 ; i++){
@@ -78,8 +91,9 @@ public class Enemy extends Combatant {
 			Down = sprite1[0];
 			Left = sprite1[1];
 			Right = sprite1[2];
+			Up = sprite1[3];
 			animation.setFrames(Down);
-			animation.setDelay(10);
+			animation.setDelay(5);
 
 
 			tileChanges = new ArrayList<int[]>();
@@ -97,7 +111,7 @@ public class Enemy extends Combatant {
 			this.atk = 15;
 			this.def = 5;
 
-			this.moveSpeed = 2;
+			this.moveSpeed = 3;
 
 			sprite1 = new BufferedImage[4][3];
 			for(int i = 0;i < 4 ; i++){
@@ -110,8 +124,9 @@ public class Enemy extends Combatant {
 			Down = sprite1[0];
 			Left = sprite1[1];
 			Right = sprite1[2];
+			Up = sprite1[3];
 			animation.setFrames(Down);
-			animation.setDelay(10);
+			animation.setDelay(5);
 
 
 			tileChanges = new ArrayList<int[]>();
@@ -124,7 +139,7 @@ public class Enemy extends Combatant {
 	}
 	
 	public Enemy(TileMap tm, String name, int atk, int def, List<Skill> skillList) {
-		this(tm, name, atk, def, 10, 10, 1, skillList);
+		this(tm, name, atk, def, 15, 15, 1, skillList);
 	}
 	
 	public Enemy(TileMap tm, String name, int atk, int def, int hp, int mp, int level, List<Skill> skillList) {
@@ -134,14 +149,22 @@ public class Enemy extends Combatant {
 
 	}
 
+	public void addSpeed(int t){
+		this.moveSpeed += t;
+	}
+
 	public void moveX(){
 		if(timer < 2000){
 			if(distance < 80){
+				right = true;
+
 				xMove = moveSpeed;
 				x += xMove;
 				timer += System.currentTimeMillis() - lastTime;
 				distance += xMove;
+
 			}else{
+				right = false;
 				xMove = 0;
 				distance = 0;
 				timer = 2000;
@@ -149,11 +172,14 @@ public class Enemy extends Combatant {
 		}
 		else if(timer>=2000 && timer <= 4000){
 			if(distance < 80){
+				left = true;
 				xMove = -moveSpeed;
 				x += xMove;
 				timer += System.currentTimeMillis() - lastTime;
 				distance -= xMove;
+
 			}else{
+				left = false;
 				xMove = 0;
 				distance = 0;
 				timer = 0;
@@ -163,24 +189,181 @@ public class Enemy extends Combatant {
 		}
 		lastTime = System.currentTimeMillis();
 	}
+	public void moveX(int a){
+		if(timer < 2000){
+			movingX = true;
+			if(distance < 80){
+				left = true;
+				xMove = -moveSpeed;
+				x += xMove;
+				timer ++;
+				distance -= xMove;
+			}else{
+				left = false;
+				xMove = 0;
+				distance = 0;
+				timer = 2000;
+			}
+		}
+		else if(timer>=2000 && timer <= 4000){
+			movingX = true;
+			if(distance < 80){
+				right = true;
+				xMove = moveSpeed;
+				x += xMove;
+				timer ++;
+				distance += xMove;
+			}else{
+				right = false;
+				xMove = 0;
+				distance = 0;
+				timer = 4001;
+			}
+		}else{
+			movingX = false;
+			timer =0;
+		}
 
-	public void update(){
-		super.update();
-		moveX();
+	}
+	public void moveY(int a){
+		if(timer < 2000){
+			movingY = true;
+			if(distance < 80){
+				down = true;
+				yMove = moveSpeed;
+				y += yMove;
+				timer++;
+				//timer += System.currentTimeMillis() - lastTime;
+				distance += yMove;
+			}else{
+				down = false;
+				yMove = 0;
+				distance = 0;
+				timer = 2000;
+			}
+		}
+		else if(timer>=2000 && timer <= 4000){
+			movingY = true;
+			if(distance < 80){
+				up = true;
+				yMove = -moveSpeed;
+				y += yMove;
+				timer ++;
+				//timer += System.currentTimeMillis() - lastTime;
+				distance -= yMove;
+			}else{
+				up = false;
+				yMove = 0;
+				distance = 0;
+				timer = 4001;
+			}
+		}else  if(timer == 4001){
+			movingY = false;
+			timer = 0;
+		}
+
+		//lastTime = System.currentTimeMillis();
+	}
+
+	public boolean combatDistance(){
+		return ((player.getx() - getx())*(player.getx() - getx()) + (player.gety() - gety())*(player.gety() - gety()) < 25600);
+	}
+
+
+	public void chasePlayerMove(){
+		flag = true;
+
+		if(y > player.gety() + 1){
+			direction = 1;
+			yMove = -moveSpeed;
+			y += yMove;
+		}
+		if(y < player.gety() - 1){
+			direction = 2;
+			yMove = moveSpeed;
+			y += yMove;
+		}
+		if(x > player.getx() + 1){
+			direction = 3;
+			xMove = -moveSpeed;
+			x += xMove;
+		}
+		if(x < player.getx() -1 ){
+			direction = 4;
+			xMove = moveSpeed;
+			x += xMove;
+		}
 
 	}
 
-	private BufferedImage getCurrentAnimationFrame() {
-		if (xMove < 0) {
-			animation.setFrames(Left);
-			animation.setDelay(30);
-			return animation.getImage();
-		} else if (xMove > 0) {
-			animation.setFrames(Right);
-			animation.setDelay(30);
-			return animation.getImage();
+	public void backHomeMove(){
+
+		if(y > homey * 32 + 16 + 1){
+			direction = 1;
+			yMove = -moveSpeed;
+			y += yMove;
 		}
-		return null;
+		if(y < homey * 32 + 16 - 1){
+			direction = 2;
+			yMove = moveSpeed;
+			y += yMove;
+		}
+		if(x > homex * 32 + 16 + 1){
+			direction = 3;
+			xMove = -moveSpeed;
+			x += xMove;
+		}
+		if(x < homex * 32 + 16 -1 ){
+			direction = 4;
+			xMove = moveSpeed;
+			x += xMove;
+		}
+		if(x == homex * 32 + 16 && y == homey * 32 + 16) flag = false;
+
+	}
+
+	public void update(){
+
+		if(combatDistance()) chasePlayerMove();
+		if(!combatDistance() && flag) backHomeMove();
+
+		if (typeEnemy == 1) {
+			moveX();
+			setAnimationFrame();
+		} else if (typeEnemy == 2) {
+			if (!movingY) {
+				moveX(2);
+				setAnimationFrame();
+				movingY = false;
+			}
+			if (!movingX) {
+				moveY(2);
+				setAnimationFrame();
+				movingX = false;
+			}
+		}
+
+		super.update();
+
+
+	}
+
+	private void setAnimationFrame() {
+		if(right){
+			if(animation.getCurrentSprite() != Right)
+				animation.setFrames(Right);
+
+		}
+		else if(left){
+			if(animation.getCurrentSprite() != Left)
+				animation.setFrames(Left);
+		}else if(up){
+			if(animation.getCurrentSprite() != Up)
+				animation.setFrames(Up);
+		}else if(down){
+			if(animation.getCurrentSprite() != Down)
+				animation.setFrames(Down);
+		}
 	}
 
 	
@@ -215,14 +398,9 @@ public class Enemy extends Combatant {
 	}
 
 	public void draw(Graphics2D g) {
-		if(typeEnemy == 0){
-			setMapPosition();
-			g.drawImage(animation.getImage(),x + xmap - width / 2,y + ymap - height / 2,null);
-		}
-		else {
-			setMapPosition();
-			g.drawImage(getCurrentAnimationFrame(),x + xmap - width / 2,y + ymap - height / 2,null);
-		}
-	}
 
+		setMapPosition();
+		g.drawImage(animation.getImage(), x + xmap - width / 2, y + ymap - height / 2, null);
+
+	}
 }

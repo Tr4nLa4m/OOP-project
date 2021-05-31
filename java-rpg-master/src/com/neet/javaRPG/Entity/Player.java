@@ -21,7 +21,7 @@ public class Player extends Combatant {
 	//time attacked
 	private long timer = 0;
 	private long lastTime = 0;
-	private final long attackCoolDown = 8000;
+	private final long attackCoolDown = 6000;
 
 	// animation
 	private final int DOWN = 0;
@@ -36,6 +36,7 @@ public class Player extends Combatant {
 	//Weapon
 	private  boolean hasSword = false;
 	private  boolean canSwordCombat = false;
+	public  boolean effect = false;
 	// gameplay
 	private long ticks;
 	
@@ -43,6 +44,7 @@ public class Player extends Combatant {
 	private int xp;
 	private int numHealthPot;
 	private int numManaPot;
+
 	
 	public Player(TileMap tm) {
 		
@@ -90,7 +92,7 @@ public class Player extends Combatant {
 
 	
 	// Used to update time.
-	public long getTicks() { return ticks; }
+	public TileMap getTileMap() { return this.tileMap; }
 	
 	// Keyboard input. Moves the player.
 	public void setDown() {
@@ -112,7 +114,11 @@ public class Player extends Combatant {
 	}
 
 	//Got Sword
-	public void gotSword() { hasSword = true; }
+	public void gotSword() {
+		hasSword = true;
+		addATK( level);
+		addDEF(2);
+	}
 	public boolean hasSword() { return hasSword; }
 
 	public void update() {
@@ -180,12 +186,14 @@ public class Player extends Combatant {
 		}
 		// update position
 		super.update();
+
 		canSwordCombat = false;
 	}
 	
 	// Draw Player.
 	public void draw(Graphics2D g) {
 		super.draw(g);
+
 	}
 	
 	public void increaseXP(Combatant enemy) {
@@ -199,8 +207,8 @@ public class Player extends Combatant {
 	
 	public void levelUp() {
 		xp = 0;
-		atk += 3;
-		def += 2;
+		addATK(3);
+		addDEF(2);
 		changeHP(20);
 		changeMP(15);
 		level++;
@@ -222,14 +230,17 @@ public class Player extends Combatant {
 		this.numManaPot += numManaPot;
 	}
 
-	public void attackedStatic() {
+	public void attackedStatic(int size) {
 
 		timer += System.currentTimeMillis() - lastTime;
 		lastTime = System.currentTimeMillis();
 		if(timer < attackCoolDown)	return;
-		this.changeHP(-1);
+		this.changeHP(-1* size);
+
 		timer = 0;
 
 	}
+
+
 
 }

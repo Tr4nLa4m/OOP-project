@@ -21,7 +21,7 @@ import com.neet.javaRPG.TileMap.TileMap;
 public class PlayState extends GameState {
 	
 	// player
-	private Player player;
+	private static Player player;
 
 	
 	// tilemap
@@ -52,18 +52,7 @@ public class PlayState extends GameState {
 		super(gsm);
 	}
 	
-	public void load(TileMap tm, Player player, ArrayList<Enemy> enemies, ArrayList<Item> items) {
 
-		this.tileMap = tm;
-		this.player = player;
-		this.enemies = enemies;
-		this.items = items;
-		
-		sectorSize = GamePanel.WIDTH;
-		xsector = player.getx() / sectorSize;
-		ysector = player.gety() / sectorSize;
-		tileMap.setPositionImmediately(-xsector * sectorSize, -ysector * sectorSize);
-	}
 	
 	public void init() {
 		
@@ -106,82 +95,75 @@ public class PlayState extends GameState {
 		Enemy d;
 		List<Skill> skillList = new ArrayList<>();
 		skillList.add(new PowerAttack(5));
-		
-		d = new Enemy(tileMap , 0);
-		d.setTilePosition(13, 7);
+
+		d = new Enemy(tileMap, 8, 4, 0);
 		d.setSkillList(skillList);
 		enemies.add(d);
 
-		d = new Enemy(tileMap,0);
-		d.setTilePosition(8, 4);
+		d = new Enemy(tileMap, 4, 4, 1);
 		d.setSkillList(skillList);
 		enemies.add(d);
 
-		d = new Enemy(tileMap,1);
-		d.setTilePosition(4, 4);
+		d = new Enemy(tileMap, 11, 33, 0);
 		d.setSkillList(skillList);
 		enemies.add(d);
 
-		d = new Enemy(tileMap,0);
-		d.setTilePosition(11, 33);
-		d.setSkillList(skillList);
-		enemies.add(d);
-		
-		d = new Enemy(tileMap,1);
-		d.setTilePosition(4, 27);
+		d = new Enemy(tileMap, 4, 27, 1);
 		d.setSkillList(skillList);
 		enemies.add(d);
 
-		d = new Enemy(tileMap,0);
-		d.setTilePosition(36, 37);
+		d = new Enemy(tileMap, 36, 37, 1);
 		d.setSkillList(skillList);
 		enemies.add(d);
 
-		d = new Enemy(tileMap,0);
-		d.setTilePosition(33, 28);
+		d = new Enemy(tileMap, 34, 28, 2);
 		d.setSkillList(skillList);
 		enemies.add(d);
 
-		d = new Enemy(tileMap,0);
-		d.setTilePosition(24, 24);
+		d = new Enemy(tileMap, 24, 24, 1);
 		d.setSkillList(skillList);
 		enemies.add(d);
 
-		d = new Enemy(tileMap, 2);
-		d.setTilePosition(33, 3);
+		d = new Enemy(tileMap, 37, 2, 2);
 		d.setSkillList(skillList);
 		enemies.add(d);
 
-		d = new Enemy(tileMap,0);
-		d.setTilePosition(23, 14);
+		d = new Enemy(tileMap, 27, 26, 0);
 		d.setSkillList(skillList);
 		enemies.add(d);
 
-		d = new Enemy(tileMap,1);
-		d.setTilePosition(33, 15);
+		d = new Enemy(tileMap, 27, 34, 0);
 		d.setSkillList(skillList);
 		enemies.add(d);
 
-		d = new Enemy(tileMap,0);
-		d.setTilePosition(32, 2);
+		d = new Enemy(tileMap, 23, 14, 0);
 		d.setSkillList(skillList);
 		enemies.add(d);
 
-		d = new Enemy(tileMap,0);
-		d.setTilePosition(2, 18);
+		d = new Enemy(tileMap, 32, 15, 1);
 		d.setSkillList(skillList);
 		enemies.add(d);
 
-		d = new Enemy(tileMap,0);
-		d.setTilePosition(14, 17);
+		d = new Enemy(tileMap, 3, 13, 1);
 		d.setSkillList(skillList);
 		enemies.add(d);
 
-		d = new Enemy(tileMap,0);
-		d.setTilePosition(17, 4);
+		d = new Enemy(tileMap, 32, 2, 0);
 		d.setSkillList(skillList);
 		enemies.add(d);
-		
+
+		d = new Enemy(tileMap, 2, 18, 0);
+		d.setSkillList(skillList);
+		enemies.add(d);
+
+		d = new Enemy(tileMap, 12, 24, 0);
+		d.setSkillList(skillList);
+		enemies.add(d);
+
+		d = new Enemy(tileMap, 17, 4, 0);
+		d.setSkillList(skillList);
+		enemies.add(d);
+
 	}
 	
 	//Add Sword
@@ -212,7 +194,8 @@ public class PlayState extends GameState {
 	
 	public void update() {
 		handleInput();
-		
+
+
 		if(enemies.isEmpty()) {
 			isWin = true;
 			finish();
@@ -229,15 +212,19 @@ public class PlayState extends GameState {
 		
 		// update player
 		player.update();
+
+		if(player.getCurrentHP() <= 0)
+		{
+			playerDead();
+		}
 		
 		// update enemies
 		for(int i = 0; i < enemies.size(); i++) {
 			
 			Enemy d = enemies.get(i);
 			d.update();
-			if(canStaticAttack(d,player)){
-					player.attackedStatic();
-
+			if(canStaticAttack(d,player)) {
+				player.attackedStatic(2);
 			}
 			if(player.intersects(d)) {
 
@@ -268,7 +255,7 @@ public class PlayState extends GameState {
 		
 		// draw player
 		player.draw(g);
-		
+
 		// draw enemies
 		for(Enemy d : enemies) {
 			d.draw(g);
@@ -332,8 +319,8 @@ public class PlayState extends GameState {
 			
 	}
 	
-	public Player getPlayer() {
-		return this.player;
+	public static Player getPlayer() {
+		return player;
 	}
 	
 	public boolean canStaticAttack(Enemy d,Player p){

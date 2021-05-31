@@ -52,7 +52,7 @@ public class Animation {
 	
 	
 	public int getFrame() { return currentFrame; }
-	public int getCount() { return count; }
+	public BufferedImage[] getCurrentSprite() { return frames; }
 	public BufferedImage getImage() { return frames[currentFrame]; }
 	public boolean hasPlayedOnce() { return timesPlayed > 0; }
 	public boolean hasPlayed(int i) { return timesPlayed == i; }
