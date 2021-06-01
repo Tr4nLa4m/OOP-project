@@ -27,7 +27,7 @@ public class PauseState extends GameState {
 		Content.drawStringBig(g, ": move", 350, 260,10);
 		
 		Content.drawStringBig(g, "space", 250, 290,10);
-		Content.drawStringBig(g, ": action", 310, 290,10);
+		Content.drawStringBig(g, ": restart ", 310, 290,10);
 		
 		Content.drawStringBig(g, "F1:", 250, 320,10);
 		Content.drawStringBig(g, "return", 280, 320,10);
@@ -35,8 +35,10 @@ public class PauseState extends GameState {
 		
 	}
 	public void handleInput() {
+
 		if(Keys.isPressed(Keys.ESCAPE)) {
 			gsm.setPaused(false);
+			gsm.setState(GameStateManager.PLAY);
 		}
 		if(Keys.isPressed(Keys.F1)) {
 			gsm.setPaused(false);

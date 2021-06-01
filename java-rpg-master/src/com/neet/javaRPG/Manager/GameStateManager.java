@@ -76,7 +76,8 @@ public class GameStateManager {
 	public void unloadState(int i) {
 		gameStates[i] = null;
 	}
-	
+
+
 	public void setPaused(boolean b) {
 		paused = b;
 	}

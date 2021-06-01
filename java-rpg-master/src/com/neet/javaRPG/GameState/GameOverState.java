@@ -20,7 +20,7 @@ public class GameOverState extends GameState {
 	
 	public void init() {
 		color = new Color(164, 198, 222);
-		isWin = false;
+		//isWin = false;
 	}
 	
 	public void update() {}

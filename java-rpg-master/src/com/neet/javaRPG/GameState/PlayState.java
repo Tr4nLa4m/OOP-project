@@ -197,7 +197,7 @@ public class PlayState extends GameState {
 
 
 		if(enemies.isEmpty()) {
-			isWin = true;
+			gsm.setIsWin(true);
 			finish();
 		}
 		
@@ -291,7 +291,7 @@ public class PlayState extends GameState {
 	
 	public void finish() {
 		gsm.setState(gsm.GAMEOVER);
-		gsm.setIsWin(isWin);
+		//gsm.setIsWin(isWin);
 	}
 	
 	public TileMap getTileMap() {
