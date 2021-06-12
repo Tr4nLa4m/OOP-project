@@ -5,7 +5,7 @@
 
 package com.neet.javaRPG.Entity;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 
@@ -35,6 +35,7 @@ public class Item extends Entity{
 		type = -1;
 		width = height = 32;
 		cwidth = cheight = 28;
+		setBound(x + xmap -width/2,y + ymap-height/2,cwidth,cheight);
 	}
 	
 	public void setType(int i) {
@@ -66,9 +67,18 @@ public class Item extends Entity{
 		}
 	}
 
+	@Override
+	public void update() {
+		super.update();
+		updateBound(x + xmap -width/2,y + ymap-height/2);
+	}
+
 	public void draw(Graphics2D g) {
 		setMapPosition();
 		g.drawImage(sprite, x + xmap - width / 2, y + ymap - height / 2, null);
+
+		//draw bounds
+		drawBound(bound, Color.yellow, g);
 	}
 	
 }

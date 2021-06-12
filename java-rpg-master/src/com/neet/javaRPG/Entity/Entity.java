@@ -4,8 +4,7 @@
 
 package com.neet.javaRPG.Entity;
 
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
+import java.awt.*;
 
 import com.neet.javaRPG.TileMap.Tile;
 import com.neet.javaRPG.TileMap.TileMap;
@@ -48,6 +47,9 @@ public abstract class Entity {
 	// animation
 	protected Animation animation;
 	protected int currentAnimation;
+
+	//Bounds
+	protected Rectangle bound;
 	
 	public Entity(TileMap tm) {
 		tileMap = tm;
@@ -98,13 +100,22 @@ public abstract class Entity {
 	}
 	
 	public boolean intersects(Entity o) {
-		return getRectangle().intersects(o.getRectangle());
+		return bound.intersects(o.getBound());
 	}
-	
-	public Rectangle getRectangle() {
-		return new Rectangle(x, y, cwidth, cheight);
+	//Get + Set Bounds
+	public void setBound(int x, int y, int width, int height){
+		bound = new Rectangle(x,y,width,height);
 	}
-	
+	public Rectangle getBound() {
+		return bound;
+	}
+
+	//update bound
+	public void updateBound(int x, int y){
+		bound.x = x;
+		bound.y = y;
+	}
+
 	// Returns whether or not the entity can
 	// move into the next position.
 	public boolean validateNextPosition() {
@@ -199,5 +210,9 @@ public abstract class Entity {
 			null
 		);
 	}
-	
+
+	public void drawBound(Rectangle rec, Color a, Graphics2D g){
+		g.setColor(a);
+		g.drawRect(rec.x, rec.y, rec.width, rec.height );
+	}
 }

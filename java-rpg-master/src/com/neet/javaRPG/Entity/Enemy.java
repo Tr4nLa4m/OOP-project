@@ -10,12 +10,17 @@ import com.neet.javaRPG.Manager.Content;
 import com.neet.javaRPG.GameState.PlayState;
 import com.neet.javaRPG.RPG.Skill;
 import com.neet.javaRPG.TileMap.TileMap;
+import javafx.scene.shape.Circle;
 
 public class Enemy extends Combatant {
 	private int xMove;
 	private int yMove;
 	boolean movingX = true;
 	boolean movingY = false;
+
+	//
+	private int xOffset;
+	private int yOffset;
 
 	private Player player = PlayState.getPlayer();
 
@@ -44,6 +49,7 @@ public class Enemy extends Combatant {
 	private boolean flag = false;
 
 
+
 	public Enemy(TileMap tm,int x, int y,int typeEnemy) {
 		this(tm, "Monster", null);
 		timer = 0;
@@ -58,6 +64,7 @@ public class Enemy extends Combatant {
 			height = 16;
 			cwidth = 16;
 			cheight = 16;
+
 
 			sprites = new BufferedImage[5];
 			for(int i = 0;i < 5 ; i++){
@@ -75,6 +82,7 @@ public class Enemy extends Combatant {
 			height = 32;
 			cwidth = 28;
 			cheight = 28;
+
 
 			this.curHP = this.maxHP = 30;
 			this.curMP = this.maxMP = 20;
@@ -105,6 +113,7 @@ public class Enemy extends Combatant {
 			cwidth = 28;
 			cheight = 28;
 
+
 			this.name = " Boss";
 			this.curHP = this.maxHP = 200;
 			this.curMP = this.maxMP = 100;
@@ -131,7 +140,8 @@ public class Enemy extends Combatant {
 
 			tileChanges = new ArrayList<int[]>();
 		}
-
+		//init bounds
+		setBound(x + xmap -width / 2,y + ymap-height / 2, cwidth, cheight);
 	}
 	
 	public Enemy(TileMap tm, String name, List<Skill> skillList) {
@@ -343,8 +353,11 @@ public class Enemy extends Combatant {
 			}
 		}
 
+		xOffset = x + xmap - width / 2;
+		yOffset = y + ymap - height / 2;
 		super.update();
 
+		updateBound(x + xmap -width / 2,y + ymap-height / 2);
 
 	}
 
@@ -352,7 +365,6 @@ public class Enemy extends Combatant {
 		if(right){
 			if(animation.getCurrentSprite() != Right)
 				animation.setFrames(Right);
-
 		}
 		else if(left){
 			if(animation.getCurrentSprite() != Left)
@@ -398,9 +410,25 @@ public class Enemy extends Combatant {
 	}
 
 	public void draw(Graphics2D g) {
-
 		setMapPosition();
 		g.drawImage(animation.getImage(), x + xmap - width / 2, y + ymap - height / 2, null);
+
+		//draw HP, MP
+		g.setColor(new Color(255, 0, 0));
+		if(typeEnemy != 0)
+			g.fillRect(xOffset + 4, yOffset - 10, (int)2*(10 * this.getCurrentHP() / this.getMaxHP()), 2);
+		else
+			g.fillRect(xOffset , yOffset - 10, (int)2*(10 * this.getCurrentHP() / this.getMaxHP()), 2);
+
+		g.setColor(new Color(0, 0, 255));
+		if(typeEnemy != 0)
+			g.fillRect(xOffset + 4, yOffset - 6, (int)2*(10 * this.getCurrentMP() / this.getMaxMP()), 2);
+		else
+			g.fillRect(xOffset , yOffset - 6, (int)2*(10 * this.getCurrentMP() / this.getMaxMP()), 2);
+
+		//draw bounds
+		g.setColor(Color.black);
+		g.drawRect(x + xmap -width / 2,y + ymap-height / 2, cwidth,cheight);
 
 	}
 }

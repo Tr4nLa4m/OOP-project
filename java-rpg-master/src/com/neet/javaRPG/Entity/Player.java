@@ -1,6 +1,6 @@
 package com.neet.javaRPG.Entity;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 import com.neet.javaRPG.Manager.Content;
@@ -37,6 +37,7 @@ public class Player extends Combatant {
 	private  boolean hasSword = false;
 	private  boolean canSwordCombat = false;
 	public  boolean effect = false;
+	public boolean canCombat = false;
 	// gameplay
 	private long ticks;
 	
@@ -45,6 +46,8 @@ public class Player extends Combatant {
 	private int numHealthPot;
 	private int numManaPot;
 
+	//Sword's Bounds
+	private Rectangle SBounds;
 	
 	public Player(TileMap tm) {
 		
@@ -56,24 +59,27 @@ public class Player extends Combatant {
 		setCurrentMP(50);
 		width = 32;
 		height = 32;
-		cwidth = 28;
-		cheight = 28;
-		
+		cwidth = 16;
+		cheight = 14;
+
+		setBound(x + xmap - 10 , y + ymap - 2 ,cwidth,cheight);
+		SBounds = new Rectangle(x-32,y-32, 64,64);
+
 		moveSpeed = 5;
 
 		for(int i = 0 ; i < 6 ; i++){
-			rightSprites[i] = Content.PLAYER_T[0][i*2];
-			upSprites[i] = Content.PLAYER_T[0][12 + i*2];
-			leftSprites[i] = Content.PLAYER_T[0][24 + i*2];
-			downSprites[i] = Content.PLAYER_T[0][36 + i*2];
+			rightSprites[i] = Content.PLAYER_T[0][i];
+			upSprites[i] = Content.PLAYER_T[0][6 + i];
+			leftSprites[i] = Content.PLAYER_T[0][12 + i];
+			downSprites[i] = Content.PLAYER_T[0][18 + i];
 
 		}
 
 		for(int i = 0 ; i < 4 ; i++){
-			RightSwordSprites[i] = Content.PLAYER_T[0][48+i*2];
-			UpSwordSprites[i] = Content.PLAYER_T[0][56+i*2];
-			LeftSwordSprites[i] = Content.PLAYER_T[0][64+i*2];
-			DownSwordSprites[i] = Content.PLAYER_T[0][72+i*2];
+			RightSwordSprites[i] = Content.PLAYER_T[0][24+i];
+			UpSwordSprites[i] = Content.PLAYER_T[0][28+i];
+			LeftSwordSprites[i] = Content.PLAYER_T[0][32+i];
+			DownSwordSprites[i] = Content.PLAYER_T[0][36+i];
 		}
 		
 		animation.setFrames(downSprites);
@@ -118,6 +124,16 @@ public class Player extends Combatant {
 		canSwordCombat = true;
 	}
 
+	public void setCombat(boolean b){
+		canCombat = b;
+	}
+
+	public boolean isCanCombat (){
+		return canCombat;
+	}
+	public Rectangle getSBounds(){
+		return SBounds;
+	}
 	//Got Sword
 	public void gotSword() {
 		hasSword = true;
@@ -150,19 +166,19 @@ public class Player extends Combatant {
 		if(canSwordCombat) {
 			if(currentAnimation == DOWN){
 				currentAnimation = DOWNCOMBAT;
-				setAnimation(DOWNCOMBAT, DownSwordSprites, 5);
+				setAnimation(DOWNCOMBAT, DownSwordSprites, 2);
 			}
 			else if(currentAnimation == UP){
 				currentAnimation = UPCOMBAT;
-				setAnimation(UPCOMBAT, UpSwordSprites, 5);
+				setAnimation(UPCOMBAT, UpSwordSprites, 2);
 			}
 			else if(currentAnimation == RIGHT){
 				currentAnimation = RIGHTCOMBAT;
-				setAnimation(RIGHTCOMBAT, RightSwordSprites, 5);
+				setAnimation(RIGHTCOMBAT, RightSwordSprites, 2);
 			}
 			else if(currentAnimation == LEFT){
 				currentAnimation = LEFTCOMBAT;
-				setAnimation(LEFTCOMBAT, LeftSwordSprites, 5);
+				setAnimation(LEFTCOMBAT, LeftSwordSprites, 2);
 			}
 
 		}else {
@@ -191,14 +207,23 @@ public class Player extends Combatant {
 		}
 		// update position
 		super.update();
-
+		//update bounds
+		updateBound(x + xmap - 10 , y + ymap - 2);
+		updateSBound();
 		canSwordCombat = false;
 	}
 	
 	// Draw Player.
 	public void draw(Graphics2D g) {
-		super.draw(g);
-
+		setMapPosition();
+		g.drawImage(
+				animation.getImage(),
+				x + xmap - width / 2 - 16,
+				y + ymap - height / 2 - 16,
+				null);
+		//draw bounds
+		drawBound(bound, Color.red,g);
+		drawBound(SBounds, Color.red, g);
 	}
 	
 	public void increaseXP(Combatant enemy) {
@@ -246,6 +271,24 @@ public class Player extends Combatant {
 
 	}
 
-
+	public void updateSBound(){
+		if(down){
+			SBounds = new Rectangle(bound.x - 10,bound.y + 18, 36,  18);
+		}else if(up){
+			SBounds = new Rectangle(bound.x - 10,bound.y - 20, 36,  18);
+		}else if(right){
+			SBounds = new Rectangle(bound.x + 20,bound.y - 16, 20 ,  44 );
+		}else if(left){
+			SBounds = new Rectangle(bound.x - 24,bound.y - 16, 20 ,  44);
+		}
+	}
+	/*
+	public void paintComponent(Graphics g) {
+		Graphics2D g2 = (Graphics2D) g;
+		super.paintComponent(g);
+		g2.setColor(Color.red);
+		g2.drawRect(10, 10, 100, 100);
+	}
+		*/
 
 }

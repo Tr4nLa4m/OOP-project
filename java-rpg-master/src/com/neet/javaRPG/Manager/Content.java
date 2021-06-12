@@ -10,7 +10,7 @@ public class Content {
 	public static BufferedImage[][] HIT_EFFECT = load("/Resources/Effect/HitEffect.png", 24,24);
 	public static BufferedImage[][] MENUBG = load("/Resources/Logo/Theme.png", 640, 640);
 	public static BufferedImage[][] DEATH_EFFECT = load("/Resources/Effect/EnemyDeathEffect.png", 32,32);
-	public static BufferedImage[][] PLAYER_T = load("/Resources/Sprites/PlayerT.png", 32, 32);
+	public static BufferedImage[][] PLAYER_T = load("/Resources/Sprites/Player.png", 64, 64);
 	public static BufferedImage[][] DIAMOND = load("/Resources/Sprites/diamond.png", 16, 16);
 	public static BufferedImage[][] MONSTER = load("/Resources/Sprites/Bat.png", 16, 16);
 	public static BufferedImage[][] MONSTER1 = load("/Resources/Sprites/monster.png", 32,32);

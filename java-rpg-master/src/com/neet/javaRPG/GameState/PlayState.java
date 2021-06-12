@@ -40,7 +40,8 @@ public class PlayState extends GameState {
 	// camera position
 	private int xsector;
 	private int ysector;
-	private int sectorSize; 
+	private int sectorSize;
+	private float camx,camy;
 	
 	// hud
 	private Hud hud;
@@ -179,14 +180,10 @@ public class PlayState extends GameState {
 		item[2].setType(Item.SWORD);
 
 		for(int i = 0; i < item.length; i++){
-			if (item[i].getItemRow() == -1 && item[i].getItemCol() == -1) {
 				if(item[i].getType() == 0)		item[i].setTilePosition(37, 28);
 				if(item[i].getType() == 1)		item[i].setTilePosition(35, 21);
-				if(item[i].getType() == 2)		item[i].setTilePosition(38, 38);
-			}
-			else {
-				item[i].setTilePosition(item[i].getItemRow(), item[i].getItemCol());
-			}
+				if(item[i].getType() == 2)		item[i].setTilePosition(37, 37);
+
 			items.add(item[i]);
 		}
 
@@ -205,10 +202,20 @@ public class PlayState extends GameState {
 
 		xsector = player.getx() / sectorSize;
 		ysector = player.gety() / sectorSize;
-		tileMap.setPosition(-xsector * sectorSize, -ysector * sectorSize);
+		camx = (float) player.getx() / sectorSize;
+		camy = (float) player.gety() / sectorSize;
+		if (camx >0.5 && camx <1.5)
+			camx = -player.getx() +(float)sectorSize/2;
+		else
+			camx = -xsector * sectorSize;
+		if (camy >0.5 && camy <1.5)
+			camy = -player.gety() +(float)sectorSize/2;
+		else
+			camy = -ysector * sectorSize;
+		tileMap.setPosition((int)camx,(int)camy);
+
 		tileMap.update();
-				
-		if(tileMap.isMoving()) return;
+
 		
 		// update player
 		player.update();
@@ -229,16 +236,29 @@ public class PlayState extends GameState {
 			if(player.intersects(d)) {
 
 				fightingEnemy = d;
-				gsm.setCombat(true);
+				//gsm.setCombat(true);
+				player.changeHP(-2);
+
+				//enemies.remove(i);
+				//i--;
+			}
+			if(player.getSBounds().intersects(d.getBound())){
+				if(player.isCanCombat()){
+					d.changeHP(-1 * player.getATK());
+					player.setCombat(false);
+				}
+			}
+			if(d.isDead())
+			{
 				enemies.remove(i);
 				i--;
-
 			}
 		}
 				
 		// update items
 		for(int i = 0; i < items.size(); i++) {
 			Item item = items.get(i);
+			item.update();
 			if(player.intersects(item)) {
 				items.remove(i);
 				i--;
@@ -286,7 +306,10 @@ public class PlayState extends GameState {
 		if(Keys.isDown(Keys.RIGHT)) player.setRight();
 		if(Keys.isDown(Keys.UP)) player.setUp();
 		if(Keys.isDown(Keys.DOWN)) player.setDown();
-		if(Keys.isDown(Keys.Q))	player.setSwordCombat();
+		if(Keys.isDown(Keys.SPACE)) {
+			player.setCombat(true);
+			player.setSwordCombat();
+		}
 	}
 	
 	public void finish() {
