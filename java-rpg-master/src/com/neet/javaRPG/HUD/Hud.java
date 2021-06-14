@@ -41,12 +41,12 @@ public class Hud {
 		g.setColor(new Color(255, 0, 0)); //red
 		g.fillRect(10, yoffset + 16, (int)2*(36 * player.getCurrentHP() / player.getMaxHP()), 8);
 		Content.drawString(g, "HP", 10, yoffset + 4);
-		Content.drawString(g, "" + player.getCurrentHP(), 40, yoffset + 4);
+		Content.drawString(g, "" + player.getCurrentHP(), yoffset + 34, yoffset + 16);
 		
 		g.setColor(new Color(0, 0, 255));
 		g.fillRect(10, yoffset + 40, (int)2*(36 * player.getCurrentMP() / player.getMaxMP()), 8);
 		Content.drawString(g, "MP", 10, yoffset + 28);
-		Content.drawString(g, "" + player.getCurrentMP(), 40, yoffset + 28);
+		Content.drawString(g, "" + player.getCurrentMP(), yoffset + 40, yoffset + 40);
 		
 		Content.drawString(g, "Lv. " + player.getLevel(), 100, yoffset + 4);
 		Content.drawString(g, "ATK: " + player.getATK(), 100, yoffset + 18);
@@ -60,4 +60,5 @@ public class Hud {
 		//draw items
 		if(player.hasSword()) g.drawImage(sword, 200, yoffset + 12, null);
 	}
+
 }

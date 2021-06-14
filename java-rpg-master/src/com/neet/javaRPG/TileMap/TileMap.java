@@ -37,7 +37,7 @@ public class TileMap {
 	// tileset
 	private BufferedImage tileset;
 	private int numTilesAcross;
-	private Tile[] tiles = new Tile[29];
+	private Tile[] tiles = new Tile[70];
 
 	//ID Tile
 	public int IDTile;
@@ -53,7 +53,7 @@ public class TileMap {
 	public TileMap() {
 		numRowsToDraw = GamePanel.HEIGHT / tileSize + 2;
 		numColsToDraw = GamePanel.WIDTH / tileSize + 2;
-		speed = 10;
+		speed = 4;
 	}
 	
 	public void loadTiles(String s, int IDTile) {
@@ -77,11 +77,20 @@ public class TileMap {
 				subimage = tileset.getSubimage((IDTile - 13) * tileSize, 2 * tileSize, tileSize, tileSize);
 			}else if(IDTile >= 17 && IDTile <= 20) {
 				subimage = tileset.getSubimage((IDTile - 17) * tileSize, 3 * tileSize, tileSize, tileSize);
-			}else {
+			}
+			else if(IDTile == 29) {
+				subimage = tileset.getSubimage(0, 0, 6 * tileSize, 9 * tileSize);
+			}else if(IDTile == 30 || IDTile == 31 || IDTile == 65) {
+				subimage = tileset.getSubimage(0, 0, 2 * tileSize, 4 * tileSize);
+			}else if(IDTile == 68) {
+				subimage = tileset.getSubimage(0, 0, 2 * tileSize, 3 * tileSize);
+			}
+			else {
 				subimage = tileset.getSubimage(0, 0, tileSize, tileSize);
 			}
 			int TileType = Tile.BLOCKED;
-			if(IDTile == 1 || IDTile == 5 || IDTile == 21 || IDTile == 22 || IDTile == 24 || IDTile == 25)
+			if(IDTile == 0 ||IDTile == 1 || IDTile == 5 || IDTile == 21 || IDTile == 22 || IDTile == 24 || IDTile == 25
+					 || IDTile == 30 || IDTile == 31 ||IDTile == 66 || IDTile == 67 ||(IDTile >= 40 && IDTile <= 58))
 					TileType = Tile.NORMAL;
 			tiles[IDTile] = new Tile(subimage, TileType);
 
@@ -94,21 +103,65 @@ public class TileMap {
 
 	public void loadMap(String s) {
 
-		loadTiles("/Resources/Sprites/GrassBackGround.png",1);
-		loadTiles("/Resources/Sprites/Grass.png",2);
-		loadTiles("/Resources/Sprites/Bush.png",3);
-		loadTiles("/Resources/Sprites/Tree.png",4);
-		loadTiles("/Resources/Sprites/DirtTileset.png",5);
+		loadTiles("/Resources/Tilesets/tile0.png",0);
+		loadTiles("/Resources/Tilesets/GrassBackGround.png",1);
+		loadTiles("/Resources/Tilesets/Grass.png",2);
+		loadTiles("/Resources/Tilesets/Bush.png",3);
+		loadTiles("/Resources/Tilesets/Tree.png",4);
+		loadTiles("/Resources/Tilesets/DirtTileset.png",5);
 		for(int i = 6 ; i <= 20; i++)
-			loadTiles("/Resources/Sprites/CliffTileset.png",i);
-		loadTiles("/Resources/Sprites/tile21.png",21);
-		loadTiles("/Resources/Sprites/tile22.png",22);
-		loadTiles("/Resources/Sprites/tile23.png",23);
-		loadTiles("/Resources/Sprites/tile24.png",24);
-		loadTiles("/Resources/Sprites/tile25.png",25);
-		loadTiles("/Resources/Sprites/tile26.png",26);
-		loadTiles("/Resources/Sprites/tile27.png",27);
-		loadTiles("/Resources/Sprites/tile28.png",28);
+			loadTiles("/Resources/Tilesets/CliffTileset.png",i);
+		loadTiles("/Resources/Tilesets/tile21.png",21);
+		loadTiles("/Resources/Tilesets/tile22.png",22);
+		loadTiles("/Resources/Tilesets/tile23.png",23);
+		loadTiles("/Resources/Tilesets/tile24.png",24);
+		loadTiles("/Resources/Tilesets/tile25.png",25);
+		loadTiles("/Resources/Tilesets/tile26.png",26);
+		loadTiles("/Resources/Tilesets/tile27.png",27);
+		loadTiles("/Resources/Tilesets/tile28.png",28);
+		loadTiles("/Resources/Tilesets/tile29.png",29);
+		loadTiles("/Resources/Tilesets/tile30.png",30);
+		loadTiles("/Resources/Tilesets/tile31.png",31);
+		loadTiles("/Resources/Tilesets/tile32.png",32);
+		loadTiles("/Resources/Tilesets/tile33.png",33);
+		loadTiles("/Resources/Tilesets/tile34.png",34);
+		loadTiles("/Resources/Tilesets/tile35.png",35);
+		loadTiles("/Resources/Tilesets/tile36.png",36);
+		loadTiles("/Resources/Tilesets/tile37.png",37);
+		loadTiles("/Resources/Tilesets/tile38.png",38);
+		loadTiles("/Resources/Tilesets/tile39.png",39);
+		loadTiles("/Resources/Tilesets/tile40.png",40);
+		loadTiles("/Resources/Tilesets/tile41.png",41);
+		loadTiles("/Resources/Tilesets/tile42.png",42);
+		loadTiles("/Resources/Tilesets/tile43.png",43);
+		loadTiles("/Resources/Tilesets/tile44.png",44);
+		loadTiles("/Resources/Tilesets/tile45.png",45);
+		loadTiles("/Resources/Tilesets/tile46.png",46);
+		loadTiles("/Resources/Tilesets/tile47.png",47);
+		loadTiles("/Resources/Tilesets/tile48.png",48);
+		loadTiles("/Resources/Tilesets/tile49.png",49);
+		loadTiles("/Resources/Tilesets/tile50.png",50);
+		loadTiles("/Resources/Tilesets/tile51.png",51);
+		loadTiles("/Resources/Tilesets/tile52.png",52);
+		loadTiles("/Resources/Tilesets/tile53.png",53);
+		loadTiles("/Resources/Tilesets/tile54.png",54);
+		loadTiles("/Resources/Tilesets/tile55.png",55);
+		loadTiles("/Resources/Tilesets/tile56.png",56);
+		loadTiles("/Resources/Tilesets/tile57.png",57);
+		loadTiles("/Resources/Tilesets/tile58.png",58);
+		loadTiles("/Resources/Tilesets/tile59.png",59);
+		loadTiles("/Resources/Tilesets/tile60.png",60);
+		loadTiles("/Resources/Tilesets/tile61.png",61);
+		loadTiles("/Resources/Tilesets/tile62.png",62);
+		loadTiles("/Resources/Tilesets/tile63.png",63);
+		loadTiles("/Resources/Tilesets/tile64.png",64);
+		loadTiles("/Resources/Tilesets/tile65.png",65);
+		loadTiles("/Resources/Tilesets/tile66.png",66);
+		loadTiles("/Resources/Tilesets/tile67.png",67);
+		loadTiles("/Resources/Tilesets/tile68.png",68);
+		loadTiles("/Resources/Tilesets/tile69.png",69);
+
+
 		try {
 			
 			InputStream in = getClass().getResourceAsStream(s);
@@ -177,13 +230,7 @@ public class TileMap {
 		this.x = x;
 		this.y = y;
 	}
-	
-	public void fixBounds() {
-		if(x < xmin) x = xmin;
-		if(y < ymin) y = ymin;
-		if(x > xmax) x = xmax;
-		if(y > ymax) y = ymax;
-	}
+
 	
 	public void update() {
 		if(x < xdest) {
@@ -241,6 +288,25 @@ public class TileMap {
 			
 		}
 		
+	}
+	public void draw1(Graphics2D g) {
+
+		for(int row = rowOffset; row < rowOffset + numRowsToDraw; row++) {
+
+			if(row >= numRows) break;
+
+			for(int col = colOffset; col < colOffset + numColsToDraw; col++) {
+
+				if(col >= numCols) break;
+				if(map[row][col] == 0 || map[row][col] == 69) continue;
+				g.drawImage(tiles[40].getImage(),x + col*tileSize, y + row * tileSize, null);
+
+				g.drawImage(tiles[map[row][col]].getImage(), x + col * tileSize ,
+							y + row * tileSize , null);
+			}
+
+		}
+
 	}
 	
 }

@@ -35,8 +35,6 @@ public abstract class Entity {
 	// attributes
 	protected int moveSpeed;
 
-	// static attack
-	protected boolean StaticAttack;
 	
 	// tilemap
 	protected TileMap tileMap;
@@ -98,7 +96,24 @@ public abstract class Entity {
 		down = true;
 		moving = validateNextPosition();
 	}
-	
+
+	//motion state
+	public boolean isDown(){ return down; }
+	public boolean isUp(){
+		return up;
+	}
+	public boolean isLeft(){ return left; }
+	public boolean isRight(){
+		return right;
+	}
+
+	//move Back when player intersect enemy
+	public void moveBack(int a,int b){
+
+
+
+	}
+
 	public boolean intersects(Entity o) {
 		return bound.intersects(o.getBound());
 	}
@@ -167,19 +182,19 @@ public abstract class Entity {
 		
 		if(left && x > xdest) x -= moveSpeed;
 		else left = false;
-		if(left && x < xdest) x = xdest;
+		if(left && x <= xdest) x = xdest;
 		
 		if(right && x < xdest) x += moveSpeed;
 		else right = false;
-		if(right && x > xdest) x = xdest;
+		if(right && x >= xdest) x = xdest;
 		
 		if(up && y > ydest) y -= moveSpeed;
 		else up = false;
-		if(up && y < ydest) y = ydest;
+		if(up && y <= ydest) y = ydest;
 		
 		if(down && y < ydest) y += moveSpeed;
 		else down = false;
-		if(down && y > ydest) y = ydest;
+		if(down && y >= ydest) y = ydest;
 		
 	}
 	

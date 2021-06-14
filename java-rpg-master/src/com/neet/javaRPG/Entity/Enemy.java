@@ -45,8 +45,11 @@ public class Enemy extends Combatant {
 	private long distance ;
 	private int direction;
 
+
+
 	private int homex,homey;
 	private boolean flag = false;
+	private boolean monster_infor = false;
 
 
 
@@ -64,7 +67,8 @@ public class Enemy extends Combatant {
 			height = 16;
 			cwidth = 16;
 			cheight = 16;
-
+			level = 1;
+			name = "Bat";
 
 			sprites = new BufferedImage[5];
 			for(int i = 0;i < 5 ; i++){
@@ -73,8 +77,6 @@ public class Enemy extends Combatant {
 			animation.setFrames(sprites);
 			animation.setDelay(10);
 
-
-			tileChanges = new ArrayList<int[]>();
 		}
 		else if(typeEnemy == 1){
 			this.typeEnemy = typeEnemy;
@@ -82,7 +84,8 @@ public class Enemy extends Combatant {
 			height = 32;
 			cwidth = 28;
 			cheight = 28;
-
+			level = 2;
+			name = "Duck";
 
 			this.curHP = this.maxHP = 30;
 			this.curMP = this.maxMP = 20;
@@ -103,8 +106,6 @@ public class Enemy extends Combatant {
 			animation.setFrames(Down);
 			animation.setDelay(5);
 
-
-			tileChanges = new ArrayList<int[]>();
 		}
 		else if(typeEnemy == 2){
 			this.typeEnemy = typeEnemy;
@@ -112,9 +113,10 @@ public class Enemy extends Combatant {
 			height = 32;
 			cwidth = 28;
 			cheight = 28;
+			level = 3;
 
 
-			this.name = " Boss";
+			this.name = " Spider";
 			this.curHP = this.maxHP = 200;
 			this.curMP = this.maxMP = 100;
 			this.atk = 15;
@@ -137,8 +139,6 @@ public class Enemy extends Combatant {
 			animation.setFrames(Down);
 			animation.setDelay(5);
 
-
-			tileChanges = new ArrayList<int[]>();
 		}
 		//init bounds
 		setBound(x + xmap -width / 2,y + ymap-height / 2, cwidth, cheight);
@@ -408,6 +408,7 @@ public class Enemy extends Combatant {
 	public ArrayList<int[]> getChanges() {
 		return tileChanges;
 	}
+	public void setMonster_infor(boolean b)	{ monster_infor = b;}
 
 	public void draw(Graphics2D g) {
 		setMapPosition();
@@ -430,5 +431,15 @@ public class Enemy extends Combatant {
 		g.setColor(Color.black);
 		g.drawRect(x + xmap -width / 2,y + ymap-height / 2, cwidth,cheight);
 
+		//draw Monster Information
+		if(monster_infor){
+			Content.drawString(g, name, 560,  4 );
+			Content.drawString(g, "HP:", 560, 16);
+			Content.drawString(g, "" + curHP, 600, 16);
+			Content.drawString(g, "MP:", 560, 24);
+			Content.drawString(g, "" + curMP, 600, 24);
+		}
+
 	}
+
 }

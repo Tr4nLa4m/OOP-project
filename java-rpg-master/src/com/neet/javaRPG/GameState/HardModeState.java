@@ -188,12 +188,12 @@ public class HardModeState extends GameState {
 
         Item[] item = new Item[3];
 
-        item[0] = new Item(tileMap);
-        item[0].setType(Item.HP_ITEM);
-        item[1] = new Item(tileMap);
-        item[1].setType(Item.MP_ITEM);
-        item[2] = new Item(tileMap);
-        item[2].setType(Item.SWORD);
+        item[0] = new Item(tileMap, 0);
+
+        item[1] = new Item(tileMap, 1);
+
+        item[2] = new Item(tileMap, 2);
+
 
         for(int i = 0; i < item.length; i++){
             if (item[i].getItemRow() == -1 && item[i].getItemCol() == -1) {

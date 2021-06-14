@@ -14,6 +14,7 @@ import com.neet.javaRPG.HUD.Hud;
 import com.neet.javaRPG.Main.GamePanel;
 import com.neet.javaRPG.Manager.GameStateManager;
 import com.neet.javaRPG.Manager.Keys;
+import com.neet.javaRPG.RPG.Action;
 import com.neet.javaRPG.RPG.Skill;
 import com.neet.javaRPG.RPG.ImplementSkill.PowerAttack;
 import com.neet.javaRPG.TileMap.TileMap;
@@ -22,6 +23,7 @@ public class PlayState extends GameState {
 	
 	// player
 	private static Player player;
+	public static Player savingPlayer;
 
 	
 	// tilemap
@@ -33,6 +35,7 @@ public class PlayState extends GameState {
 	
 	// items
 	private ArrayList<Item> items;
+	private Item port;
 	
 	// sparkles
 	private boolean isWin;
@@ -63,7 +66,7 @@ public class PlayState extends GameState {
 		
 		// load map
 		tileMap = new TileMap();
-		tileMap.loadMap("/Resources/Maps/testmap.map");
+		tileMap.loadMap("/Resources/Maps/map1.map");
 		
 		// create player
 		player = new Player(tileMap);
@@ -100,7 +103,7 @@ public class PlayState extends GameState {
 		d = new Enemy(tileMap, 8, 4, 0);
 		d.setSkillList(skillList);
 		enemies.add(d);
-
+/*****
 		d = new Enemy(tileMap, 4, 4, 1);
 		d.setSkillList(skillList);
 		enemies.add(d);
@@ -164,26 +167,23 @@ public class PlayState extends GameState {
 		d = new Enemy(tileMap, 17, 4, 0);
 		d.setSkillList(skillList);
 		enemies.add(d);
-
+*****/
 	}
 	
-	//Add Sword
+	//Add
 	private void populateItems() {
 		
 		Item[] item = new Item[3];
 	
-		item[0] = new Item(tileMap);
-		item[0].setType(Item.HP_ITEM);
-		item[1] = new Item(tileMap);
-		item[1].setType(Item.MP_ITEM);
-		item[2] = new Item(tileMap);
-		item[2].setType(Item.SWORD);
+		item[0] = new Item(tileMap,0);
+		item[1] = new Item(tileMap,1);
+		item[2] = new Item(tileMap,2);
+
 
 		for(int i = 0; i < item.length; i++){
 				if(item[i].getType() == 0)		item[i].setTilePosition(37, 28);
 				if(item[i].getType() == 1)		item[i].setTilePosition(35, 21);
 				if(item[i].getType() == 2)		item[i].setTilePosition(37, 37);
-
 			items.add(item[i]);
 		}
 
@@ -194,7 +194,10 @@ public class PlayState extends GameState {
 
 
 		if(enemies.isEmpty()) {
-			gsm.setIsWin(true);
+			port = new Item(tileMap,3);
+			port.setTilePosition(37,4);
+			items.add(port);
+
 			finish();
 		}
 		
@@ -204,52 +207,48 @@ public class PlayState extends GameState {
 		ysector = player.gety() / sectorSize;
 		camx = (float) player.getx() / sectorSize;
 		camy = (float) player.gety() / sectorSize;
-		if (camx >0.5 && camx <1.5)
-			camx = -player.getx() +(float)sectorSize/2;
-		else
+		if (camx >0.5 && camx <1.5) {
+			camx = -player.getx() + (float) sectorSize / 2;
+			player.moveCamX = true;
+		}
+		else {
 			camx = -xsector * sectorSize;
-		if (camy >0.5 && camy <1.5)
-			camy = -player.gety() +(float)sectorSize/2;
-		else
+			player.moveCamX = false;
+		}
+		if (camy >0.5 && camy <1.5) {
+			camy = -player.gety() + (float) sectorSize / 2;
+			player.moveCamY = true;
+		}
+		else {
 			camy = -ysector * sectorSize;
+			player.moveCamY = false;
+		}
 		tileMap.setPosition((int)camx,(int)camy);
+
 
 		tileMap.update();
 
 		
 		// update player
 		player.update();
-
 		if(player.getCurrentHP() <= 0)
 		{
 			playerDead();
 		}
-		
+
+
 		// update enemies
 		for(int i = 0; i < enemies.size(); i++) {
 			
 			Enemy d = enemies.get(i);
 			d.update();
-			if(canStaticAttack(d,player)) {
-				player.attackedStatic(2);
-			}
-			if(player.intersects(d)) {
+			player.setCombat(false);
+			handleInput();
+			Action.Combat(player,d);
 
-				fightingEnemy = d;
-				//gsm.setCombat(true);
-				player.changeHP(-2);
-
-				//enemies.remove(i);
-				//i--;
-			}
-			if(player.getSBounds().intersects(d.getBound())){
-				if(player.isCanCombat()){
-					d.changeHP(-1 * player.getATK());
-					player.setCombat(false);
-				}
-			}
 			if(d.isDead())
 			{
+				player.increaseXP(d);
 				enemies.remove(i);
 				i--;
 			}
@@ -260,12 +259,17 @@ public class PlayState extends GameState {
 			Item item = items.get(i);
 			item.update();
 			if(player.intersects(item)) {
-				items.remove(i);
-				i--;
-				item.collected(player);
+				if(item.getType() != 3)
+				{
+					items.remove(i);
+					i--;
+					item.collected(player);
+				}else{
+					finish();
+				}
 			}
 		}
-		
+
 	}
 	
 	public void draw(Graphics2D g) {
@@ -313,8 +317,8 @@ public class PlayState extends GameState {
 	}
 	
 	public void finish() {
-		gsm.setState(gsm.GAMEOVER);
-		//gsm.setIsWin(isWin);
+		savePlayer();
+		gsm.setState(gsm.PLAY2);
 	}
 	
 	public TileMap getTileMap() {
@@ -323,9 +327,17 @@ public class PlayState extends GameState {
 	
 	public void playerDead() {
 		isWin = false;
-		finish();
+		GameOver();
 	}
-	
+
+	public void GameOver(){
+		gsm.setIsWin(false);
+		gsm.setState(gsm.GAMEOVER);
+	}
+
+	public void savePlayer(){
+		savingPlayer = player;
+	}
 	public void enemyDefeat() {
 		enemies.remove(fightingEnemy);
 		
@@ -345,14 +357,7 @@ public class PlayState extends GameState {
 	public static Player getPlayer() {
 		return player;
 	}
-	
-	public boolean canStaticAttack(Enemy d,Player p){
-		double dx = Math.abs( p.getx() - d.getx());
-		double dy = Math.abs( p.gety() - d.gety());
-		if( dx < 64 &&  dy < 64)	return  true;
-		return false;
 
-	}
 	public Enemy getEnemy() {
 		return fightingEnemy;
 	}

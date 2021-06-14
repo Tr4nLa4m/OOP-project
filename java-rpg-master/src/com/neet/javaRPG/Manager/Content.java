@@ -15,6 +15,8 @@ public class Content {
 	public static BufferedImage[][] MONSTER = load("/Resources/Sprites/Bat.png", 16, 16);
 	public static BufferedImage[][] MONSTER1 = load("/Resources/Sprites/monster.png", 32,32);
 	public static BufferedImage[][] ITEMS = load("/Resources/Sprites/Item.png", 32, 32);
+	public static BufferedImage[][]	PORT = load("/Resources/Sprites/port.png", 80, 80);
+
 
 	
 	public static BufferedImage[][] font = load("/Resources/HUD/font.gif", 8, 8);

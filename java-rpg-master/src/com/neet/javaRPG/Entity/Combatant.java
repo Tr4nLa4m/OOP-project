@@ -16,7 +16,7 @@ public abstract class Combatant extends Entity {
 	protected int maxMP;
 	protected int level;
 	
-	protected int[] xpCap = new int[] {1, 2, 3, 5, 8, 13, 21, 35, 56, 91};
+	protected int[] xpCap = new int[] {1, 3, 5, 10, 16};
 	
 	protected List<Skill> skillList;
 	

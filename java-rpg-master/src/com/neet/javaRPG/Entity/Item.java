@@ -19,6 +19,7 @@ public class Item extends Entity{
 	public static final int HP_ITEM = 0;
 	public static final int MP_ITEM = 1;
 	public static final int SWORD = 2;
+	public static final int PORT = 3;
 
 	//position item
 	public int ItemRow = -1;
@@ -30,12 +31,24 @@ public class Item extends Entity{
 	public int getItemCol(){ return ItemCol; }
 
 
-	public Item(TileMap tm) {
+	public Item(TileMap tm, int type) {
 		super(tm);
-		type = -1;
-		width = height = 32;
-		cwidth = cheight = 28;
-		setBound(x + xmap -width/2,y + ymap-height/2,cwidth,cheight);
+		setType(type);
+		if(type == 0 || type == 1){
+			width = height = 32;
+			cwidth = 18;
+			cheight = 30;
+			setBound(x + xmap -width/2 + 6,y + ymap-height/2,cwidth,cheight);
+		}else if(type == 2){
+			width = height = 32;
+			cwidth = 28;
+			cheight = 28;
+			setBound(x + xmap -width/2 ,y + ymap-height/2,cwidth,cheight);
+		}else if(type == 3){
+			width = height = 80;
+			cwidth = cheight = 40;
+			setBound(x + xmap -width/2 + 12 ,y + ymap-height/2 + 12,cwidth,cheight);
+		}
 	}
 	
 	public void setType(int i) {
@@ -48,7 +61,10 @@ public class Item extends Entity{
 		}
 		else if(type == MP_ITEM){
 			sprite = Content.ITEMS[0][2];
+		}else if(type == PORT){
+			sprite = Content.PORT[0][0];
 		}
+
 	}
 
 	public int getType(){
@@ -65,15 +81,22 @@ public class Item extends Entity{
 		else if(type == MP_ITEM){
 			p.changeMP(50);
 		}
+		else if(type == PORT){
+
+		}
 	}
 
 	@Override
 	public void update() {
 		super.update();
-		updateBound(x + xmap -width/2,y + ymap-height/2);
+		if(type <= 1)	updateBound(x + xmap -width/2 + 6,y + ymap-height/2);
+		else if(type == 2)	updateBound(x + xmap -width/2 ,y + ymap-height/2);
+		else if(type == 3)	updateBound(x + xmap -width/2 + 12 ,y + ymap-height/2 + 12);
+
 	}
 
 	public void draw(Graphics2D g) {
+
 		setMapPosition();
 		g.drawImage(sprite, x + xmap - width / 2, y + ymap - height / 2, null);
 

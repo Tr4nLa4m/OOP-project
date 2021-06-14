@@ -21,12 +21,15 @@ public class GameStateManager {
 	
 
 	
-	public static final int NUM_STATES = 5;
+	public static final int NUM_STATES = 8;
 	public static final int INTRO = 0;
 	public static final int MENU = 1;
 	public static final int PLAY = 2;
 	public static final int GAMEOVER = 3;
 	public static final int HARDMODE = 4;
+	public static final int PLAY2 = 5;
+	public static final int TUTOR = 6;
+	public static final int INFO = 7;
 	
 	public GameStateManager() {
 		
@@ -60,10 +63,23 @@ public class GameStateManager {
 			gameStates[i] = new PlayState(this);
 			break;
 		}
+		case PLAY2:{
+
+			gameStates[i] = new PlayState2(this);
+			break;
+		}
 		case HARDMODE:{
 				gameStates[i] = new HardModeState(this);
 				break;
 		}
+		case TUTOR: {
+				gameStates[i] = new TutorialState(this);
+				break;
+		}
+		case INFO: {
+				gameStates[i] = new InfoState(this);
+				break;
+			}
 
 		case GAMEOVER:
 			gameStates[i] = new GameOverState(this);
