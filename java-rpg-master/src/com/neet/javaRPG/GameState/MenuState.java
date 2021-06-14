@@ -64,7 +64,7 @@ public class MenuState extends GameState {
 			gsm.setState(GameStateManager.PLAY);
 		}
 		if(currentOption == 1) {
-			gsm.setState(GameStateManager.PLAY);
+			gsm.setState(GameStateManager.HARDMODE);
 		}
 		if(currentOption == 2){
 			gsm.setState(GameStateManager.TUTOR);

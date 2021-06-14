@@ -76,10 +76,10 @@ public class Item extends Entity{
 			p.gotSword();
 		}
 		else if (type == HP_ITEM){
-			p.changeHP(50);
+			p.changeNumHealthPot(1);
 		}
 		else if(type == MP_ITEM){
-			p.changeMP(50);
+			p.changeNumManaPot(1);
 		}
 		else if(type == PORT){
 

@@ -14,9 +14,12 @@ public class Content {
 	public static BufferedImage[][] DIAMOND = load("/Resources/Sprites/diamond.png", 16, 16);
 	public static BufferedImage[][] MONSTER = load("/Resources/Sprites/Bat.png", 16, 16);
 	public static BufferedImage[][] MONSTER1 = load("/Resources/Sprites/monster.png", 32,32);
+	public static BufferedImage[][] BIGBAT = load("/Resources/Sprites/BigBat.png", 48, 72);
+	public static BufferedImage[][] BAFFALO = load("/Resources/Sprites/Buffalo.png", 48, 72);
 	public static BufferedImage[][] ITEMS = load("/Resources/Sprites/Item.png", 32, 32);
 	public static BufferedImage[][]	PORT = load("/Resources/Sprites/port.png", 80, 80);
-
+	public static BufferedImage[][] HP = load("/Resources/Sprites/HP.png", 24, 24);
+	public static BufferedImage[][] MP = load("/Resources/Sprites/MP.png", 24, 24);
 
 	
 	public static BufferedImage[][] font = load("/Resources/HUD/font.gif", 8, 8);

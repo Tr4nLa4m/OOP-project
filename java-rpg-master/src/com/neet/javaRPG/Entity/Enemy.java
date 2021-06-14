@@ -6,11 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.neet.javaRPG.GameState.HardModeState;
+import com.neet.javaRPG.GameState.PlayState2;
 import com.neet.javaRPG.Manager.Content;
 import com.neet.javaRPG.GameState.PlayState;
 import com.neet.javaRPG.RPG.Skill;
 import com.neet.javaRPG.TileMap.TileMap;
-import javafx.scene.shape.Circle;
+
 
 public class Enemy extends Combatant {
 	private int xMove;
@@ -22,7 +24,8 @@ public class Enemy extends Combatant {
 	private int xOffset;
 	private int yOffset;
 
-	private Player player = PlayState.getPlayer();
+	private  Player player = PlayState.getPlayer();
+
 
 	private BufferedImage[] sprites ;
 	private BufferedImage[][] sprite1;
@@ -59,6 +62,7 @@ public class Enemy extends Combatant {
 		this.homex = x;
 		this.homey = y;
 		setTilePosition(x,y);
+		setPlayer();
 
 		lastTime = System.currentTimeMillis();
 		if(typeEnemy == 0){
@@ -140,6 +144,96 @@ public class Enemy extends Combatant {
 			animation.setDelay(5);
 
 		}
+		else if(typeEnemy == 3){
+			this.typeEnemy = typeEnemy;
+			name = "Flame";
+			width = 32;
+			height = 32;
+			cwidth = 28;
+			cheight = 28;
+
+			this.atk = 5;
+			this.moveSpeed = 2;
+
+			sprite1 = new BufferedImage[4][3];
+			for(int i = 0;i < 4 ; i++){
+				for(int j = 9; j < 12; j++){
+					sprite1[i][j - 9] = Content.MONSTER1[i + 1][j];
+				}
+			}
+			Down = sprite1[0];
+			animation.setFrames(Down);
+			animation.setDelay(5);
+
+			tileChanges = new ArrayList<int[]>();
+		}
+		else if(typeEnemy == 4){
+			this.typeEnemy = typeEnemy;
+			width = 48;
+			height = 72;
+			cwidth = 44;
+			cheight = 70;
+			level = 4;
+
+
+			this.name = " Buffalo";
+			this.curHP = this.maxHP = 300;
+			this.curMP = this.maxMP = 100;
+			this.atk = 20;
+			this.def = 10;
+
+			this.moveSpeed = 3;
+
+			sprite1 = new BufferedImage[4][3];
+			for(int i = 0;i < 4 ; i++){
+				for(int j = 0; j < 3; j++){
+					sprite1[i][j] = Content.BAFFALO[i][j];
+				}
+			}
+
+			down = true;
+			Down = sprite1[0];
+			Left = sprite1[1];
+			Right = sprite1[2];
+			Up = sprite1[3];
+			animation.setFrames(Down);
+			animation.setDelay(5);
+
+		}
+		else if(typeEnemy == 5){
+			this.typeEnemy = typeEnemy;
+			width = 48;
+			height = 72;
+			cwidth = 48;
+			cheight = 52;
+			level = 4;
+
+
+			this.name = "Big Bat";
+			this.curHP = this.maxHP = 350;
+			this.curMP = this.maxMP = 100;
+			this.atk = 20;
+			this.def = 10;
+
+			this.moveSpeed = 4;
+
+			sprite1 = new BufferedImage[4][3];
+			for(int i = 0;i < 4 ; i++){
+				for(int j = 0; j < 3; j++){
+					sprite1[i][j] = Content.BIGBAT[i][j];
+				}
+			}
+
+			down = true;
+			Down = sprite1[0];
+			Left = sprite1[1];
+			Right = sprite1[2];
+			Up = sprite1[3];
+			animation.setFrames(Down);
+			animation.setDelay(5);
+
+		}
+
 		//init bounds
 		setBound(x + xmap -width / 2,y + ymap-height / 2, cwidth, cheight);
 	}
@@ -275,7 +369,7 @@ public class Enemy extends Combatant {
 		//lastTime = System.currentTimeMillis();
 	}
 
-	public boolean combatDistance(){
+	public boolean combatDistance(Player player){
 		return ((player.getx() - getx())*(player.getx() - getx()) + (player.gety() - gety())*(player.gety() - gety()) < 25600);
 	}
 
@@ -334,13 +428,17 @@ public class Enemy extends Combatant {
 
 	public void update(){
 
-		if(combatDistance()) chasePlayerMove();
-		if(!combatDistance() && flag) backHomeMove();
+		if(typeEnemy != 3) {
+			if (combatDistance(player)) chasePlayerMove();
+			if (!combatDistance(player) && flag) backHomeMove();
+		}else{
+			chasePlayerMove();
+		}
 
-		if (typeEnemy == 1) {
+		if (typeEnemy == 1 || typeEnemy == 5) {
 			moveX();
 			setAnimationFrame();
-		} else if (typeEnemy == 2) {
+		} else if (typeEnemy == 2 || typeEnemy == 4) {
 			if (!movingY) {
 				moveX(2);
 				setAnimationFrame();
@@ -378,29 +476,8 @@ public class Enemy extends Combatant {
 		}
 	}
 
-	
-	public Skill useSkill() {
-		int numUsableSkill = 0;
-		if(skillList.size() == 1) {
-			return skillList.get(0);
-		}
-		for(Skill s : skillList) {
-			if(s.canCast(this))
-				numUsableSkill++;
-		}
-		Random rnd = new Random();
-		try {
-			return skillList.get(rnd.nextInt(numUsableSkill));	
-		}catch(Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-		
-	}
-	
-	public boolean canUseSkill() {
-		return !skillList.isEmpty();
-	}
+
+
 	
 	public int getTypeEnemy() {
 		return typeEnemy;
@@ -409,6 +486,12 @@ public class Enemy extends Combatant {
 		return tileChanges;
 	}
 	public void setMonster_infor(boolean b)	{ monster_infor = b;}
+
+	public void setPlayer(){
+		if(PlayState2.getPlayer() != null)	player = PlayState2.getPlayer();
+		else if(PlayState.getPlayer() != null) player = PlayState.getPlayer();
+		else player = HardModeState.getPlayer();
+	}
 
 	public void draw(Graphics2D g) {
 		setMapPosition();

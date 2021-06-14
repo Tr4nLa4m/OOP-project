@@ -52,13 +52,17 @@ public class Hud {
 		Content.drawString(g, "ATK: " + player.getATK(), 100, yoffset + 18);
 		Content.drawString(g, "DEF: " + player.getDEF(), 100, yoffset + 32);
 		Content.drawString(g, "Item" , 200, yoffset +4);
-		
+
+		g.drawImage(Content.HP[0][0], 200, yoffset + 22, null);
+		Content.drawString(g, "" + player.getNumHealthPot(), 214, yoffset + 36);
+		g.drawImage(Content.MP[0][0], 230, yoffset + 22, null);
+		Content.drawString(g, "" + player.getNumManaPot(), 244, yoffset + 36);
 		// draw diamond amount
 		g.setColor(textColor);
 		g.setFont(font);
 		
 		//draw items
-		if(player.hasSword()) g.drawImage(sword, 200, yoffset + 12, null);
+		if(player.hasSword()) g.drawImage(sword, 160, yoffset + 12, null);
 	}
 
 }

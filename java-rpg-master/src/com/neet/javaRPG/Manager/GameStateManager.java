@@ -11,7 +11,6 @@ public class GameStateManager {
 	private PauseState pauseState;
 	
 	private boolean combat;
-	private CombatState combatState;
 	
 	private boolean isWin;
 	
@@ -35,9 +34,7 @@ public class GameStateManager {
 		
 		paused = false;
 		pauseState = new PauseState(this);
-		
-		combat = false;
-		combatState = new CombatState(this);
+
 		
 		gameStates = new GameState[NUM_STATES];
 		setState(INTRO);
@@ -110,10 +107,7 @@ public class GameStateManager {
 		if(paused) {
 			pauseState.update();
 		}
-		else if(combat) {
-			combatState.setPlayState((PlayState)gameStates[currentState]); 
-			combatState.update();
-		}
+
 		else if(gameStates[currentState] != null) {
 			gameStates[currentState].update();
 		}
@@ -123,10 +117,7 @@ public class GameStateManager {
 		if(paused) {
 			pauseState.draw(g);
 		}
-		else if(combat) {
-			update();
-			combatState.draw(g);
-		}
+
 		else if(gameStates[currentState] != null) {
 			gameStates[currentState].draw(g);
 		}

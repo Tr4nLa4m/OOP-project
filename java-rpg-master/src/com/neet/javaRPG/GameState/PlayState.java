@@ -23,7 +23,6 @@ public class PlayState extends GameState {
 	
 	// player
 	private static Player player;
-	public static Player savingPlayer;
 
 	
 	// tilemap
@@ -31,7 +30,6 @@ public class PlayState extends GameState {
 	
 	// enemies
 	private ArrayList<Enemy> enemies;
-	private Enemy fightingEnemy;
 	
 	// items
 	private ArrayList<Item> items;
@@ -103,7 +101,7 @@ public class PlayState extends GameState {
 		d = new Enemy(tileMap, 8, 4, 0);
 		d.setSkillList(skillList);
 		enemies.add(d);
-/*****
+
 		d = new Enemy(tileMap, 4, 4, 1);
 		d.setSkillList(skillList);
 		enemies.add(d);
@@ -167,7 +165,7 @@ public class PlayState extends GameState {
 		d = new Enemy(tileMap, 17, 4, 0);
 		d.setSkillList(skillList);
 		enemies.add(d);
-*****/
+
 	}
 	
 	//Add
@@ -310,6 +308,8 @@ public class PlayState extends GameState {
 		if(Keys.isDown(Keys.RIGHT)) player.setRight();
 		if(Keys.isDown(Keys.UP)) player.setUp();
 		if(Keys.isDown(Keys.DOWN)) player.setDown();
+		if(Keys.isPressed(Keys.G)) Action.drinkManaPot(player);
+		if(Keys.isPressed(Keys.H)) Action.drinkHealthPot(player);
 		if(Keys.isDown(Keys.SPACE)) {
 			player.setCombat(true);
 			player.setSwordCombat();
@@ -317,7 +317,6 @@ public class PlayState extends GameState {
 	}
 	
 	public void finish() {
-		savePlayer();
 		gsm.setState(gsm.PLAY2);
 	}
 	
@@ -335,30 +334,20 @@ public class PlayState extends GameState {
 		gsm.setState(gsm.GAMEOVER);
 	}
 
-	public void savePlayer(){
-		savingPlayer = player;
-	}
-	public void enemyDefeat() {
-		enemies.remove(fightingEnemy);
-		
-		// make any changes to tile map
-		ArrayList<int[]> ali = fightingEnemy.getChanges();
-		for(int[] j : ali) {
-			tileMap.setTile(j[0], j[1], j[2]);
-		}
-		player.increaseXP(fightingEnemy);
-		if(player.canLevelUp()) {
-			player.levelUp();
-			player.changeSkill(0, new PowerAttack(player.getATK()));
-		}
-			
-	}
+
 	
-	public static Player getPlayer() {
+	public static void savePlayer(Player p) {
+		p.changeHP(-100 + player.getCurrentHP());
+		p.changeMP(-50 + player.getCurrentMP());
+		p.changeNumHealthPot(-2 + player.getNumHealthPot());
+		p.changeNumManaPot(-2 + player.getNumManaPot());
+		p.addLevel(player.getLevel() - 1);
+
+		if(player.hasSword())	p.gotSword();
+
+	}
+	public static Player getPlayer(){
 		return player;
 	}
 
-	public Enemy getEnemy() {
-		return fightingEnemy;
-	}
 }

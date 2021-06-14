@@ -22,7 +22,7 @@ import com.neet.javaRPG.TileMap.TileMap;
 public class PlayState2 extends GameState {
 
     // player
-    private static Player player2;
+    private static Player player;
 
 
     // tilemap
@@ -30,11 +30,10 @@ public class PlayState2 extends GameState {
 
     // enemies
     private ArrayList<Enemy> enemies;
-    private Enemy fightingEnemy;
 
     // items
     private ArrayList<Item> items;
-
+    private Item port;
 
     // sparkles
     private boolean isWin;
@@ -44,6 +43,9 @@ public class PlayState2 extends GameState {
     private int ysector;
     private int sectorSize;
     private float camx,camy;
+
+    //timer
+    private long timer = 0, lastTime = 0;
 
     // hud
     private Hud hud;
@@ -68,24 +70,25 @@ public class PlayState2 extends GameState {
         tileMap.loadMap("/Resources/Maps/map2.map");
 
         // create player
-        player2 = new Player(tileMap);
-
+        player = new Player(tileMap);
+        if(PlayState.getPlayer() == null)   HardModeState.savePlayer(player);
+        else                                PlayState.savePlayer(player);
 
         // fill lists
         populateEnemies();
-        //populateItems();
+        populateItems();
 
         // initialize player
-        player2.setTilePosition(4, 4);
+        player.setTilePosition(2, 16);
 
         // set up camera position
         sectorSize = GamePanel.WIDTH;
-        xsector = player2.getx() / sectorSize;
-        ysector = player2.gety() / sectorSize;
+        xsector = player.getx() / sectorSize;
+        ysector = player.gety() / sectorSize;
         tileMap.setPositionImmediately(-xsector * sectorSize, -ysector * sectorSize);
 
         // load hud
-        hud = new Hud(player2, enemies);
+        hud = new Hud(player, enemies);
 
         // start event
         boxes = new ArrayList<Rectangle>();
@@ -99,154 +102,185 @@ public class PlayState2 extends GameState {
         List<Skill> skillList = new ArrayList<>();
         skillList.add(new PowerAttack(5));
 
-        d = new Enemy(tileMap, 8, 4, 0);
+        d = new Enemy(tileMap, 5, 6, 1);
         d.setSkillList(skillList);
+        BuffEnenmy(d,1 );
         enemies.add(d);
- /*****
-        d = new Enemy(tileMap, 4, 4, 1);
+
+        d = new Enemy(tileMap, 8, 13, 1);
+        d.setSkillList(skillList);
+        BuffEnenmy(d,1 );
+        enemies.add(d);
+
+        d = new Enemy(tileMap, 8, 7, 0);
+        d.setSkillList(skillList);
+        BuffEnenmy(d,0 );
+        enemies.add(d);
+
+        d = new Enemy(tileMap, 25, 11, 2);
         d.setSkillList(skillList);
         enemies.add(d);
 
-        d = new Enemy(tileMap, 11, 33, 0);
+        d = new Enemy(tileMap, 27, 15, 1);
+        d.setSkillList(skillList);
+        BuffEnenmy(d,1 );
+        enemies.add(d);
+
+        d = new Enemy(tileMap, 21, 3, 1);
         d.setSkillList(skillList);
         enemies.add(d);
 
-        d = new Enemy(tileMap, 4, 27, 1);
+        d = new Enemy(tileMap, 28, 2, 4);
         d.setSkillList(skillList);
         enemies.add(d);
 
-        d = new Enemy(tileMap, 36, 37, 1);
+        d = new Enemy(tileMap, 38, 2, 1);
+        d.setSkillList(skillList);
+        BuffEnenmy(d,1 );
+        enemies.add(d);
+
+        d = new Enemy(tileMap, 38, 3, 1);
+        d.setSkillList(skillList);
+        BuffEnenmy(d,1 );
+        enemies.add(d);
+
+        d = new Enemy(tileMap, 38, 4, 1);
+        d.setSkillList(skillList);
+        BuffEnenmy(d,1 );
+        enemies.add(d);
+
+        d = new Enemy(tileMap, 47, 3, 5);
         d.setSkillList(skillList);
         enemies.add(d);
 
-        d = new Enemy(tileMap, 34, 28, 2);
+        d = new Enemy(tileMap, 52, 11, 4);
         d.setSkillList(skillList);
         enemies.add(d);
 
-        d = new Enemy(tileMap, 24, 24, 1);
+        d = new Enemy(tileMap, 47, 13, 1);
+        BuffEnenmy(d,1 );
         d.setSkillList(skillList);
         enemies.add(d);
 
-        d = new Enemy(tileMap, 37, 2, 2);
-        d.setSkillList(skillList);
-        enemies.add(d);
 
-        d = new Enemy(tileMap, 27, 26, 0);
-        d.setSkillList(skillList);
-        enemies.add(d);
-
-        d = new Enemy(tileMap, 27, 34, 0);
-        d.setSkillList(skillList);
-        enemies.add(d);
-
-        d = new Enemy(tileMap, 23, 14, 0);
-        d.setSkillList(skillList);
-        enemies.add(d);
-
-        d = new Enemy(tileMap, 32, 15, 1);
-        d.setSkillList(skillList);
-        enemies.add(d);
-
-        d = new Enemy(tileMap, 3, 13, 1);
-        d.setSkillList(skillList);
-        enemies.add(d);
-
-        d = new Enemy(tileMap, 32, 2, 0);
-        d.setSkillList(skillList);
-        enemies.add(d);
-
-        d = new Enemy(tileMap, 2, 18, 0);
-        d.setSkillList(skillList);
-        enemies.add(d);
-
-        d = new Enemy(tileMap, 12, 24, 0);
-        d.setSkillList(skillList);
-        enemies.add(d);
-
-        d = new Enemy(tileMap, 17, 4, 0);
-        d.setSkillList(skillList);
-        enemies.add(d);
-****/
     }
-/****
+
+    //Add Sword
     private void populateItems() {
 
-        Item[] item = new Item[3];
+        Item item;
+        item = new Item(tileMap,0);
+        item.setTilePosition(29,17);
+        items.add(item);
 
-        item[0] = new Item(tileMap,0);
-        item[1] = new Item(tileMap,1);
-        item[2] = new Item(tileMap,2);
+        item = new Item(tileMap,0);
+        item.setTilePosition(41,10);
+        items.add(item);
 
+        item = new Item(tileMap,0);
+        item.setTilePosition(44,1);
+        items.add(item);
 
-        for(int i = 0; i < item.length; i++){
-            if(item[i].getType() == 0)		item[i].setTilePosition(37, 28);
-            if(item[i].getType() == 1)		item[i].setTilePosition(35, 21);
-            if(item[i].getType() == 2)		item[i].setTilePosition(37, 37);
-            items.add(item[i]);
-        }
+        item = new Item(tileMap,1);
+        item.setTilePosition(10,18);
+        items.add(item);
+
 
     }
-*****/
+
+    //flame attack
+    public void updateEnemy(){
+
+        Thread enemySpawner = new Thread(() -> {
+            try {
+                Thread.sleep(5000); //delay time
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            //TO_DO
+            enemySpawn(3, 39, 3);
+            enemySpawn(39, 3, 3);
+            enemySpawn(39, 39, 3);
+            enemySpawn(3, 3, 3);
+        });
+        enemySpawner.start();
+    }
+
+    public void enemySpawn(int x, int y, int typeEnemy){
+        Enemy d;
+        List<Skill> skillList = new ArrayList<>();
+        skillList.add(new PowerAttack(5));
+        d = new Enemy(tileMap, x, y, typeEnemy);
+        d.setSkillList(skillList);
+        enemies.add(d);
+    }
+
+
     public void update() {
         handleInput();
 
-/****
-        if(enemies.isEmpty()) {
-            port = new Item(tileMap,3);
-            port.setTilePosition(37,4);
-            items.add(port);
 
+        //update flame Enemy
+        timer += System.currentTimeMillis() - lastTime;
+        if(timer > 10000) {
+            updateEnemy();
+            timer = 0;
+        }
+        lastTime = System.currentTimeMillis();
+
+
+        if(enemies.isEmpty()) {
             finish();
         }
-***/
+
         // update camera
 
-        xsector = player2.getx() / sectorSize;
-        ysector = player2.gety() / sectorSize;
-        camx = (float) player2.getx() / sectorSize;
-        camy = (float) player2.gety() / sectorSize;
+        xsector = player.getx() / sectorSize;
+        ysector = player.gety() / sectorSize;
+        camx = (float) player.getx() / sectorSize;
+        camy = (float) player.gety() / sectorSize;
         if (camx >0.5 && camx <1.5) {
-            camx = -player2.getx() + (float) sectorSize / 2;
-            player2.moveCamX = true;
+            camx = -player.getx() + (float) sectorSize / 2;
+            player.moveCamX = true;
         }
         else {
             camx = -xsector * sectorSize;
-            player2.moveCamX = false;
+            player.moveCamX = false;
         }
+/***
         if (camy >0.5 && camy <1.5) {
-            camy = -player2.gety() + (float) sectorSize / 2;
-            player2.moveCamY = true;
+            camy = -player.gety() + (float) sectorSize / 2;
+            player.moveCamY = true;
         }
         else {
             camy = -ysector * sectorSize;
-            player2.moveCamY = false;
+            player.moveCamY = false;
         }
+ ****/
         tileMap.setPosition((int)camx,(int)camy);
-
 
         tileMap.update();
 
-
         // update player
-        player2.update();
-        if(player2.getCurrentHP() <= 0)
+        player.update();
+
+        if(player.getCurrentHP() <= 0)
         {
             playerDead();
         }
-
 
         // update enemies
         for(int i = 0; i < enemies.size(); i++) {
 
             Enemy d = enemies.get(i);
             d.update();
-            player2.setCombat(false);
+            player.setCombat(false);
             handleInput();
-            Action.Combat(player2,d);
+            Action.Combat(player,d);
 
             if(d.isDead())
             {
-                player2.increaseXP(d);
+                player.increaseXP(d);
                 enemies.remove(i);
                 i--;
             }
@@ -256,15 +290,12 @@ public class PlayState2 extends GameState {
         for(int i = 0; i < items.size(); i++) {
             Item item = items.get(i);
             item.update();
-            if(player2.intersects(item)) {
-                if(item.getType() != 3)
-                {
+            if(player.intersects(item)) {
+
                     items.remove(i);
                     i--;
-                    item.collected(player2);
-                }else{
-                    finish();
-                }
+                    item.collected(player);
+
             }
         }
 
@@ -276,7 +307,7 @@ public class PlayState2 extends GameState {
         tileMap.draw1(g);
 
         // draw player
-        player2.draw(g);
+        player.draw(g);
 
         // draw enemies
         for(Enemy d : enemies) {
@@ -284,12 +315,10 @@ public class PlayState2 extends GameState {
         }
 
         // draw items
-    /**
-
         for(Item i : items) {
             i.draw(g);
         }
-**/
+
         // draw hud
         hud.draw(g);
 
@@ -306,13 +335,15 @@ public class PlayState2 extends GameState {
             gsm.setPaused(true);
         }
 
-        if(Keys.isDown(Keys.LEFT)) player2.setLeft();
-        if(Keys.isDown(Keys.RIGHT)) player2.setRight();
-        if(Keys.isDown(Keys.UP)) player2.setUp();
-        if(Keys.isDown(Keys.DOWN)) player2.setDown();
+        if(Keys.isDown(Keys.LEFT)) player.setLeft();
+        if(Keys.isDown(Keys.RIGHT)) player.setRight();
+        if(Keys.isDown(Keys.UP)) player.setUp();
+        if(Keys.isDown(Keys.DOWN)) player.setDown();
+        if(Keys.isDown(Keys.G)) Action.drinkManaPot(this.player);
+        if(Keys.isDown(Keys.H)) Action.drinkHealthPot(this.player);
         if(Keys.isDown(Keys.SPACE)) {
-            player2.setCombat(true);
-            player2.setSwordCombat();
+            player.setCombat(true);
+            player.setSwordCombat();
         }
     }
 
@@ -336,25 +367,31 @@ public class PlayState2 extends GameState {
     }
 
 
-    public void enemyDefeat() {
-        enemies.remove(fightingEnemy);
-
-        // make any changes to tile map
-        ArrayList<int[]> ali = fightingEnemy.getChanges();
-        for(int[] j : ali) {
-            tileMap.setTile(j[0], j[1], j[2]);
-        }
-        player2.increaseXP(fightingEnemy);
-        if(player2.canLevelUp()) {
-            player2.levelUp();
-            player2.changeSkill(0, new PowerAttack(player2.getATK()));
-        }
-
-    }
-
     public static Player getPlayer() {
-        return player2;
+        return player;
     }
 
 
+    public void BuffEnenmy(Enemy d,int type) {
+        if(type == 0){
+            d.changeHP(10);
+            d.changeMP(10);
+            d.addATK(3);
+            d.addDEF(2);
+        }
+        else if(type == 1){
+            d.addSpeed(1);
+            d.changeHP(20);
+            d.changeMP(20);
+            d.addATK(5);
+            d.addDEF(3);
+        }
+        else if(type == 2){
+            d.addSpeed(1);
+            d.changeHP(100);
+            d.changeMP(50);
+            d.addATK(10);
+            d.addDEF(5);
+        }
+    }
 }

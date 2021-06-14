@@ -14,6 +14,7 @@ import com.neet.javaRPG.HUD.Hud;
 import com.neet.javaRPG.Main.GamePanel;
 import com.neet.javaRPG.Manager.GameStateManager;
 import com.neet.javaRPG.Manager.Keys;
+import com.neet.javaRPG.RPG.Action;
 import com.neet.javaRPG.RPG.Skill;
 import com.neet.javaRPG.RPG.ImplementSkill.PowerAttack;
 import com.neet.javaRPG.TileMap.TileMap;
@@ -29,10 +30,10 @@ public class HardModeState extends GameState {
 
     // enemies
     private ArrayList<Enemy> enemies;
-    private Enemy fightingEnemy;
 
     // items
     private ArrayList<Item> items;
+    private Item port;
 
     // sparkles
     private boolean isWin;
@@ -41,6 +42,10 @@ public class HardModeState extends GameState {
     private int xsector;
     private int ysector;
     private int sectorSize;
+    private float camx,camy;
+
+    //timer
+    private long timer = 0, lastTime = 0;
 
     // hud
     private Hud hud;
@@ -62,7 +67,7 @@ public class HardModeState extends GameState {
 
         // load map
         tileMap = new TileMap();
-        tileMap.loadMap("/Resources/Maps/testmap.map");
+        tileMap.loadMap("/Resources/Maps/map1.map");
 
         // create player
         player = new Player(tileMap);
@@ -188,33 +193,66 @@ public class HardModeState extends GameState {
 
         Item[] item = new Item[3];
 
-        item[0] = new Item(tileMap, 0);
-
-        item[1] = new Item(tileMap, 1);
-
-        item[2] = new Item(tileMap, 2);
+        item[0] = new Item(tileMap,0);
+        item[1] = new Item(tileMap,1);
+        item[2] = new Item(tileMap,2);
 
 
         for(int i = 0; i < item.length; i++){
-            if (item[i].getItemRow() == -1 && item[i].getItemCol() == -1) {
-                if(item[i].getType() == 0)		item[i].setTilePosition(37, 28);
-                if(item[i].getType() == 1)		item[i].setTilePosition(35, 21);
-                if(item[i].getType() == 2)		item[i].setTilePosition(38, 38);
-            }
-            else {
-                item[i].setTilePosition(item[i].getItemRow(), item[i].getItemCol());
-            }
+            if(item[i].getType() == 0)		item[i].setTilePosition(37, 28);
+            if(item[i].getType() == 1)		item[i].setTilePosition(35, 21);
+            if(item[i].getType() == 2)		item[i].setTilePosition(37, 37);
             items.add(item[i]);
         }
 
     }
 
+    //flame attack
+    public void updateEnemy(){
+
+        Thread enemySpawner = new Thread(() -> {
+            try {
+                Thread.sleep(5000); //delay time
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            //TO_DO
+            enemySpawn(3, 39, 3);
+            enemySpawn(39, 3, 3);
+            enemySpawn(39, 39, 3);
+            enemySpawn(3, 3, 3);
+        });
+        enemySpawner.start();
+    }
+
+    public void enemySpawn(int x, int y, int typeEnemy){
+        Enemy d;
+        List<Skill> skillList = new ArrayList<>();
+        skillList.add(new PowerAttack(5));
+        d = new Enemy(tileMap, x, y, typeEnemy);
+        d.setSkillList(skillList);
+        enemies.add(d);
+    }
+
+
     public void update() {
         handleInput();
 
 
+        //update flame Enemy
+        timer += System.currentTimeMillis() - lastTime;
+        if(timer > 12000) {
+            updateEnemy();
+            timer = 0;
+        }
+        lastTime = System.currentTimeMillis();
+
+
         if(enemies.isEmpty()) {
-            isWin = true;
+            port = new Item(tileMap,3);
+            port.setTilePosition(37,4);
+            items.add(port);
+
             finish();
         }
 
@@ -222,10 +260,27 @@ public class HardModeState extends GameState {
 
         xsector = player.getx() / sectorSize;
         ysector = player.gety() / sectorSize;
-        tileMap.setPosition(-xsector * sectorSize, -ysector * sectorSize);
-        tileMap.update();
+        camx = (float) player.getx() / sectorSize;
+        camy = (float) player.gety() / sectorSize;
+        if (camx >0.5 && camx <1.5) {
+            camx = -player.getx() + (float) sectorSize / 2;
+            player.moveCamX = true;
+        }
+        else {
+            camx = -xsector * sectorSize;
+            player.moveCamX = false;
+        }
+        if (camy >0.5 && camy <1.5) {
+            camy = -player.gety() + (float) sectorSize / 2;
+            player.moveCamY = true;
+        }
+        else {
+            camy = -ysector * sectorSize;
+            player.moveCamY = false;
+        }
+        tileMap.setPosition((int)camx,(int)camy);
 
-        if(tileMap.isMoving()) return;
+        tileMap.update();
 
         // update player
         player.update();
@@ -240,26 +295,31 @@ public class HardModeState extends GameState {
 
             Enemy d = enemies.get(i);
             d.update();
-            if(canStaticAttack(d,player)) {
-                player.attackedStatic(3);
-            }
-            if(player.intersects(d)) {
+            player.setCombat(false);
+            handleInput();
+            Action.Combat(player,d);
 
-                fightingEnemy = d;
-                gsm.setCombat(true);
+            if(d.isDead())
+            {
+                player.increaseXP(d);
                 enemies.remove(i);
                 i--;
-
             }
         }
 
         // update items
         for(int i = 0; i < items.size(); i++) {
             Item item = items.get(i);
+            item.update();
             if(player.intersects(item)) {
-                items.remove(i);
-                i--;
-                item.collected(player);
+                if(item.getType() != 3)
+                {
+                    items.remove(i);
+                    i--;
+                    item.collected(player);
+                }else{
+                    finish();
+                }
             }
         }
 
@@ -303,12 +363,16 @@ public class HardModeState extends GameState {
         if(Keys.isDown(Keys.RIGHT)) player.setRight();
         if(Keys.isDown(Keys.UP)) player.setUp();
         if(Keys.isDown(Keys.DOWN)) player.setDown();
-        if(Keys.isDown(Keys.Q))	player.setSwordCombat();
+        if(Keys.isDown(Keys.G)) Action.drinkManaPot(player);
+        if(Keys.isDown(Keys.H)) Action.drinkHealthPot(player);
+        if(Keys.isDown(Keys.SPACE)) {
+            player.setCombat(true);
+            player.setSwordCombat();
+        }
     }
 
     public void finish() {
-        gsm.setState(gsm.GAMEOVER);
-        gsm.setIsWin(isWin);
+        gsm.setState(gsm.PLAY2);
     }
 
     public TileMap getTileMap() {
@@ -317,22 +381,22 @@ public class HardModeState extends GameState {
 
     public void playerDead() {
         isWin = false;
-        finish();
+        GameOver();
     }
 
-    public void enemyDefeat() {
-        enemies.remove(fightingEnemy);
+    public void GameOver(){
+        gsm.setIsWin(false);
+        gsm.setState(gsm.GAMEOVER);
+    }
 
-        // make any changes to tile map
-        ArrayList<int[]> ali = fightingEnemy.getChanges();
-        for(int[] j : ali) {
-            tileMap.setTile(j[0], j[1], j[2]);
-        }
-        player.increaseXP(fightingEnemy);
-        if(player.canLevelUp()) {
-            player.levelUp();
-            player.changeSkill(0, new PowerAttack(player.getATK()));
-        }
+    public static void savePlayer(Player p) {
+        p.changeHP(-100 + player.getCurrentHP());
+        p.changeMP(-50 + player.getCurrentMP());
+        p.changeNumHealthPot(-2 + player.getNumHealthPot());
+        p.changeNumManaPot(-2 + player.getNumManaPot());
+        p.addLevel(player.getLevel() - 1);
+
+        if(player.hasSword())	p.gotSword();
 
     }
 
@@ -340,13 +404,7 @@ public class HardModeState extends GameState {
         return player;
     }
 
-    public boolean canStaticAttack(Enemy d,Player p){
-        double dx = Math.abs( p.getx() - d.getx());
-        double dy = Math.abs( p.gety() - d.gety());
-        if( dx < 64 &&  dy < 64)	return  true;
-        return false;
 
-    }
     public void BuffEnenmy(Enemy d,int type) {
         if(type == 0){
             d.changeHP(10);

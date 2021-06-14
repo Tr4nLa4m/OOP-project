@@ -246,11 +246,13 @@ public class Player extends Combatant {
 	}
 	
 	public void changeNumHealthPot(int numHealthPot) {
-		this.numHealthPot += numHealthPot;
+		if(this.numHealthPot + numHealthPot >= 0)
+			this.numHealthPot += numHealthPot;
 	}
 	
 	public void changeNumManaPot(int numManaPot) {
-		this.numManaPot += numManaPot;
+		if(this.numManaPot + numManaPot >= 0)
+			this.numManaPot += numManaPot;
 	}
 
 	public void setLastTime(long n){
