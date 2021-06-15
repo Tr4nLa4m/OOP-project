@@ -511,8 +511,8 @@ public class Enemy extends Combatant {
 			g.fillRect(xOffset , yOffset - 6, (int)2*(10 * this.getCurrentMP() / this.getMaxMP()), 2);
 
 		//draw bounds
-		g.setColor(Color.black);
-		g.drawRect(x + xmap -width / 2,y + ymap-height / 2, cwidth,cheight);
+		//g.setColor(Color.black);
+		//g.drawRect(x + xmap -width / 2,y + ymap-height / 2, cwidth,cheight);
 
 		//draw Monster Information
 		if(monster_infor){

@@ -101,7 +101,7 @@ public class Item extends Entity{
 		g.drawImage(sprite, x + xmap - width / 2, y + ymap - height / 2, null);
 
 		//draw bounds
-		drawBound(bound, Color.yellow, g);
+		//drawBound(bound, Color.yellow, g);
 	}
 	
 }

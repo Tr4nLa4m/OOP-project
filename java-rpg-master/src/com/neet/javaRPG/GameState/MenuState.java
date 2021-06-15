@@ -34,17 +34,18 @@ public class MenuState extends GameState {
 
 		g.drawImage(bg, 0, 0, null);
 
-		Content.drawStringBig(g, options[0], 250, 200, 30);
-		Content.drawStringBig(g, options[1], 250, 250, 30);
-		Content.drawStringBig(g, options[2], 250, 300, 30);
-		Content.drawStringBig(g, options[3], 250, 350, 30);
-		Content.drawStringBig(g, options[4], 250, 400, 30);
+		Content.drawStringBig(g, options[0], 230, 100, 30);
+		Content.drawStringBig(g, options[1], 230, 150, 30);
+		Content.drawStringBig(g, options[2], 230, 200, 30);
+		Content.drawStringBig(g, options[3], 230, 250, 30);
+		Content.drawStringBig(g, options[4], 230, 300, 30);
 
-		if(currentOption == 0) g.drawImage(diamond, 230, 210, null);
-		else if(currentOption == 1) g.drawImage(diamond, 230, 260, null);
-		else if(currentOption == 2) g.drawImage(diamond, 230, 310, null);
-		else if(currentOption == 3) g.drawImage(diamond, 230, 360, null);
-		else if(currentOption == 4) g.drawImage(diamond, 230, 410, null);
+		if(currentOption == 0) g.drawImage(diamond, 210, 110, null);
+		else if(currentOption == 1) g.drawImage(diamond, 210, 160, null);
+		else if(currentOption == 2) g.drawImage(diamond, 210, 210, null);
+		else if(currentOption == 3) g.drawImage(diamond, 210, 260, null);
+		else if(currentOption == 4) g.drawImage(diamond, 210, 310, null);
+
 	}
 	
 	public void handleInput() {

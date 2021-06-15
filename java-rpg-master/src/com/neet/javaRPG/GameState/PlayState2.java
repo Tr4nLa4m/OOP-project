@@ -44,6 +44,9 @@ public class PlayState2 extends GameState {
     private int sectorSize;
     private float camx,camy;
 
+    private boolean flag = true;
+    private long timeH;
+    private long lastTimeH;
     //timer
     private long timer = 0, lastTime = 0;
 
@@ -188,6 +191,12 @@ public class PlayState2 extends GameState {
 
     }
 
+    //update flag
+    public void updateFlag(){
+        timeH = System.currentTimeMillis() - lastTimeH;
+        if(timeH > 3000) flag = true;
+    }
+
     //flame attack
     public void updateEnemy(){
 
@@ -218,7 +227,7 @@ public class PlayState2 extends GameState {
 
     public void update() {
         handleInput();
-
+        updateFlag();
 
         //update flame Enemy
         timer += System.currentTimeMillis() - lastTime;
@@ -229,7 +238,7 @@ public class PlayState2 extends GameState {
         lastTime = System.currentTimeMillis();
 
 
-        if(enemies.isEmpty()) {
+        if(enemies.size() == 4) {
             finish();
         }
 
@@ -339,8 +348,16 @@ public class PlayState2 extends GameState {
         if(Keys.isDown(Keys.RIGHT)) player.setRight();
         if(Keys.isDown(Keys.UP)) player.setUp();
         if(Keys.isDown(Keys.DOWN)) player.setDown();
-        if(Keys.isDown(Keys.G)) Action.drinkManaPot(this.player);
-        if(Keys.isDown(Keys.H)) Action.drinkHealthPot(this.player);
+        if(Keys.isPressed(Keys.G) && flag == true){
+            Action.drinkManaPot(player);
+            flag = false;
+            lastTimeH = System.currentTimeMillis();
+        }
+        if(Keys.isPressed(Keys.H) && flag == true){
+            Action.drinkHealthPot(player);
+            flag = false;
+            lastTimeH = System.currentTimeMillis();
+        }
         if(Keys.isDown(Keys.SPACE)) {
             player.setCombat(true);
             player.setSwordCombat();

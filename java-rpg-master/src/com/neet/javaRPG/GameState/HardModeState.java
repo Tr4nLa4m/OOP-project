@@ -47,6 +47,10 @@ public class HardModeState extends GameState {
     //timer
     private long timer = 0, lastTime = 0;
 
+    private boolean flag = true;
+    private long timeH;
+    private long lastTimeH;
+
     // hud
     private Hud hud;
 
@@ -234,10 +238,15 @@ public class HardModeState extends GameState {
         enemies.add(d);
     }
 
+    //update flag
+    public void updateFlag(){
+        timeH = System.currentTimeMillis() - lastTimeH;
+        if(timeH > 3000) flag = true;
+    }
 
     public void update() {
         handleInput();
-
+        updateFlag();
 
         //update flame Enemy
         timer += System.currentTimeMillis() - lastTime;
@@ -363,8 +372,16 @@ public class HardModeState extends GameState {
         if(Keys.isDown(Keys.RIGHT)) player.setRight();
         if(Keys.isDown(Keys.UP)) player.setUp();
         if(Keys.isDown(Keys.DOWN)) player.setDown();
-        if(Keys.isDown(Keys.G)) Action.drinkManaPot(player);
-        if(Keys.isDown(Keys.H)) Action.drinkHealthPot(player);
+        if(Keys.isPressed(Keys.G) && flag == true){
+            Action.drinkManaPot(player);
+            flag = false;
+            lastTimeH = System.currentTimeMillis();
+        }
+        if(Keys.isPressed(Keys.H) && flag == true){
+            Action.drinkHealthPot(player);
+            flag = false;
+            lastTimeH = System.currentTimeMillis();
+        }
         if(Keys.isDown(Keys.SPACE)) {
             player.setCombat(true);
             player.setSwordCombat();

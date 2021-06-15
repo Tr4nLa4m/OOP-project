@@ -43,7 +43,11 @@ public class PlayState extends GameState {
 	private int ysector;
 	private int sectorSize;
 	private float camx,camy;
-	
+
+	private boolean flag = true;
+	private long timeH;
+	private long lastTimeH;
+
 	// hud
 	private Hud hud;
 	
@@ -186,10 +190,16 @@ public class PlayState extends GameState {
 		}
 
 	}
+
+	//update flag
+	public void updateFlag(){
+		timeH = System.currentTimeMillis() - lastTimeH;
+		if(timeH > 3000) flag = true;
+	}
 	
 	public void update() {
 		handleInput();
-
+		updateFlag();
 
 		if(enemies.isEmpty()) {
 			port = new Item(tileMap,3);
@@ -308,8 +318,16 @@ public class PlayState extends GameState {
 		if(Keys.isDown(Keys.RIGHT)) player.setRight();
 		if(Keys.isDown(Keys.UP)) player.setUp();
 		if(Keys.isDown(Keys.DOWN)) player.setDown();
-		if(Keys.isPressed(Keys.G)) Action.drinkManaPot(player);
-		if(Keys.isPressed(Keys.H)) Action.drinkHealthPot(player);
+		if(Keys.isPressed(Keys.G) && flag == true){
+			Action.drinkManaPot(player);
+			flag = false;
+			lastTimeH = System.currentTimeMillis();
+		}
+		if(Keys.isPressed(Keys.H) && flag == true){
+			Action.drinkHealthPot(player);
+			flag = false;
+			lastTimeH = System.currentTimeMillis();
+		}
 		if(Keys.isDown(Keys.SPACE)) {
 			player.setCombat(true);
 			player.setSwordCombat();

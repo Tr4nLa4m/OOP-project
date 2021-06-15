@@ -194,8 +194,8 @@ public class Player extends Combatant {
 				y + ymap - height / 2 - 16,
 				null);
 		//draw bounds
-		drawBound(bound, Color.red,g);
-		drawBound(SBounds, Color.red, g);
+		//drawBound(bound, Color.red,g);
+		//drawBound(SBounds, Color.red, g);
 	}
 	
 	public void increaseXP(Combatant enemy) {
